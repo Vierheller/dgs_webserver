@@ -1,4 +1,15 @@
-<main>
-  <app-navbar></app-navbar>
-  <app-footer></app-footer>
-</main>
+<div layout="column" layout-fill>
+  <header>
+    <mat-toolbar md-scroll-shrink>
+      <span>DHBW goes Space</span>
+    </mat-toolbar>
+  </header>
+
+  <main  class='md-padding' layout="row" flex>
+    <app-navbar></app-navbar>
+  </main>
+
+  <footer>
+    <app-footer></app-footer>
+  </footer>
+</div>
