@@ -1,3 +1,24 @@
-<p>
-  picture works!
-</p>
+<mat-grid-list cols="2" rowHeight="2:1">
+  <mat-grid-tile>
+    <img src="http://4.bp.blogspot.com/-usm8Zvgt6sc/VXCwhpurswI/AAAAAAAAAK4/GAvuRBQgyXQ/s1600/AG%2BWetterballon%2BKrahl%2B4.png" height="auto" width="auto">
+  </mat-grid-tile>
+
+  <mat-grid-tile>
+    <mat-table #table [dataSource]="dataSource">
+      <!-- Parameter Column -->
+      <ng-container matColumnDef="parameter">
+        <mat-header-cell *matHeaderCellDef> Parameter </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.parameter}} </mat-cell>
+      </ng-container>
+
+      <!-- Value Column -->
+      <ng-container matColumnDef="value">
+        <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </mat-grid-tile>
+</mat-grid-list>

@@ -1,11 +1,20 @@
 <mat-tab-group>
-  <mat-tab label="Dashboard">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <i class="material-icons icon-margin-tab">dashboard</i>Dashboard
+    </ng-template>
     <app-dashboard></app-dashboard>
   </mat-tab>
   <mat-tab label="Verlauf">
+    <ng-template mat-tab-label>
+      <i class="material-icons icon-margin-tab">insert_chart</i>Verlauf
+    </ng-template>
     <app-history></app-history>
   </mat-tab>
   <mat-tab label="Log">
+    <ng-template mat-tab-label>
+      <i class="material-icons icon-margin-tab">info</i>Log
+    </ng-template>
     <app-log></app-log>
   </mat-tab>
 </mat-tab-group>

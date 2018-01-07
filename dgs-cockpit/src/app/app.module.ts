@@ -5,6 +5,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatTableModule } from '@angular/material/table';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -40,6 +44,10 @@ import { LogComponent } from './log/log.component';
     BrowserAnimationsModule,
     MatToolbarModule,
     MatCardModule,
+    MatExpansionModule,
+    MatSliderModule,
+    MatTableModule,
+    MatGridListModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

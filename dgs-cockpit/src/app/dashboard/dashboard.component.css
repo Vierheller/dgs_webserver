@@ -1,0 +1,5 @@
+.time-slider {
+  width: 100%;
+  touch-action: none;
+  -moz-user-select: none;
+}

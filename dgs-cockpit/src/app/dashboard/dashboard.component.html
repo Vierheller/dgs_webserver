@@ -1,5 +1,40 @@
-<p>
-  Hier werden die aktuellen Live Daten angezeigt.
-</p>
-<mat-card>Simple card</mat-card>
-<mat-card>Simple card 2</mat-card>
+<div class="card-container">
+  <mat-card class="card-item">
+    <mat-accordion multi="true">
+
+      <mat-expansion-panel expanded="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Übersicht
+          </mat-panel-title>
+          <mat-panel-description>
+            Das wichtigste auf einen Blick
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <app-picture></app-picture>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Erweiterte Ansicht
+          </mat-panel-title>
+          <mat-panel-description>
+            Zeige alle Daten an.
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <app-telemetry></app-telemetry>
+
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </mat-card>
+
+  <mat-card class="card-item">
+    <h3>Zeitachse</h3>
+    <mat-slider class="time-slider" disabled="false" min="0" max="100" step="1" value="100"></mat-slider>
+  </mat-card>
+</div>
