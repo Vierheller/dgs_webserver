@@ -9,6 +9,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -48,6 +49,7 @@ import { LogComponent } from './log/log.component';
     MatSliderModule,
     MatTableModule,
     MatGridListModule,
+    ChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
