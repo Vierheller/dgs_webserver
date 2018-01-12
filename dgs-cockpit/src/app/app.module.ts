@@ -22,6 +22,8 @@ import { ChartComponent } from './history/chart/chart.component';
 import { SelectionComponent } from './history/selection/selection.component';
 import { HistoryComponent } from './history/history.component';
 import { LogComponent } from './log/log.component';
+import { DatabaseConnectorService} from './services/database-connector/database-connector.service';
+import { TelemetryService } from './services/telemetry.service';
 
 
 @NgModule({
