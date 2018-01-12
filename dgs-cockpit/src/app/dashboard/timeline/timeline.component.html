@@ -1,3 +1,5 @@
-<p>
-  timeline works!
-</p>
+<mat-card class="card-item">
+  <p>Zeit: 09:43 {{timeState}}</p><br />
+  <mat-slide-toggle (change)="toggleTimeline()">Zeit ändern</mat-slide-toggle>
+  <mat-slider class="time-slider" [disabled]="timeline" [(ngModel)]="dashboardTimeline" (ngModelChange)="changeTime($event)" min="0" max="100" step="1" value="100"></mat-slider>
+</mat-card>

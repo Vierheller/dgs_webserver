@@ -10,6 +10,8 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ChartsModule } from 'ng2-charts';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgModel } from "@angular/forms";
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -37,6 +39,7 @@ import { LogComponent } from './log/log.component';
     SelectionComponent,
     HistoryComponent,
     LogComponent,
+    NgModel
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ import { LogComponent } from './log/log.component';
     MatTableModule,
     MatGridListModule,
     ChartsModule,
+    MatSlideToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
