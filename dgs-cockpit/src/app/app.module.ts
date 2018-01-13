@@ -12,6 +12,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { ChartsModule } from 'ng2-charts';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgModel } from "@angular/forms";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -56,6 +57,7 @@ import { TelemetryService } from './services/telemetry.service';
     MatGridListModule,
     ChartsModule,
     MatSlideToggleModule,
+    MatCheckboxModule,
   ],
   providers: [TelemetryService, DatabaseConnectorService],
   bootstrap: [AppComponent]
