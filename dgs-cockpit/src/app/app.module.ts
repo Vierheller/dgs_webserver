@@ -57,7 +57,7 @@ import { TelemetryService } from './services/telemetry.service';
     ChartsModule,
     MatSlideToggleModule,
   ],
-  providers: [],
+  providers: [TelemetryService, DatabaseConnectorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
