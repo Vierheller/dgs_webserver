@@ -9,9 +9,13 @@ export class TelemetryService {
   constructor(public dataService: DatabaseConnectorService) {
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
       console.log('TelemetryService constructor');
-      this.dataService.db.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-          console.log('ONCHANGE ' + change);
+      this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+          console.log('ONCHANGE ' + JSON.stringify(change));
           this.emitData();
+      });
+
+      this.dataService.localDb.info().then(function (info) {
+        console.log(info);
       });
   }
 
@@ -24,10 +28,10 @@ export class TelemetryService {
 
   emitData(): void {
     // Sollte hier sein http://127.0.0.1:5984/dgs/_design/example/_view/foo
-    this.dataService.db.query('/example/_view/foo')
+    this.dataService.localDb.query('telemetry/allDocuments/')
       .then((data) => {
         const dataset = data.rows.map(row => {
-          console.log('ROW' + row);
+          console.log('ROW' + row.value);
           return row.value;
         });
       this.dataSubject.next(dataset);
