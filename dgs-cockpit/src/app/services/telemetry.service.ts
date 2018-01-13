@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
 import { Subject } from 'rxjs/Subject';
+import { TelemetryInternal } from '../models/Telemetry';
+import { Promise } from 'q';
 
 @Injectable()
 export class TelemetryService {
@@ -18,7 +20,6 @@ export class TelemetryService {
         console.log(info);
       });
   }
-
   // Kann von aussen aufgerufen werden
   getData(): any {
     console.log('TelemetryService getData()');
@@ -31,13 +32,21 @@ export class TelemetryService {
     this.dataService.localDb.query('telemetry/allDocuments/')
       .then((data) => {
         const dataset = data.rows.map(row => {
-          console.log('ROW' + row.value);
-          return row.value;
+          console.log('ROW' + row.id);
+          return row.id;
         });
       this.dataSubject.next(dataset);
     })
     .catch((error) => {
       console.log(error);
     });
+  }
+
+  getTelemetryById(id: string): Promise<TelemetryInternal> {
+    return this.dataService.localDb.get(id)
+      .then(function (doc) {
+        return <TelemetryInternal>doc.data;
+    })
+    .catch((error) => {console.log(error); });
   }
 }
