@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from "@angular/material";
-import { TelemetryService } from "../../services/telemetry.service";
+import { MatTableDataSource } from '@angular/material';
+import { TelemetryService } from '../../services/telemetry.service';
+import { TelemetryInternal } from '../../models/Telemetry';
 
 @Component({
   selector: 'app-telemetry',
@@ -8,14 +9,33 @@ import { TelemetryService } from "../../services/telemetry.service";
   styleUrls: ['./telemetry.component.css']
 })
 export class TelemetryComponent implements OnInit {
+  lastTelemetry: TelemetryInternal;
   displayedColumns = ['parameter', 'value'];
   dataSource = new MatTableDataSource<Element>(telemetricData);
 
-  constructor(private telemetrieServ:TelemetryService) { }
+  constructor(private telemetrieService: TelemetryService) {
+   }
 
   ngOnInit() {
+    this.telemetrieService.getData().subscribe((data) => {
+      console.log('COMPONENT DATA: ' + data[0]);
+      this.telemetrieService.getTelemetryById(data[data.length - 1])
+          .then((tele) => {
+            this.lastTelemetry = tele;
+            this.convertTelemetryToElement();
+          });
+      });
   }
 
+  convertTelemetryToElement() {
+    const tempArray = new Array<Element>();
+    for (const p in this.lastTelemetry) {
+      if (this.lastTelemetry.hasOwnProperty(p) ) {
+         tempArray.push({parameter: p, value: this.lastTelemetry[p]});
+      }
+    }
+    this.dataSource = new MatTableDataSource<Element>(tempArray);
+  }
 }
 
 export interface Element {

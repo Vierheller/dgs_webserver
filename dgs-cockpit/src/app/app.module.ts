@@ -27,6 +27,8 @@ import { HistoryComponent } from './history/history.component';
 import { LogComponent } from './log/log.component';
 import { DatabaseConnectorService} from './services/database-connector/database-connector.service';
 import { TelemetryService } from './services/telemetry.service';
+import { ImageService } from './services/image.service';
+import { LogService } from './services/log.service';
 
 
 @NgModule({
@@ -59,7 +61,7 @@ import { TelemetryService } from './services/telemetry.service';
     MatSlideToggleModule,
     MatCheckboxModule,
   ],
-  providers: [TelemetryService, DatabaseConnectorService],
+  providers: [DatabaseConnectorService, TelemetryService, LogService, ImageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

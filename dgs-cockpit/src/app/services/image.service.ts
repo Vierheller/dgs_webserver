@@ -1,27 +1,30 @@
 import { Injectable } from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
 import { Subject } from 'rxjs/Subject';
-import { TelemetryInternal } from '../models/Telemetry';
+import { Image } from '../models/Image';
 import { Promise } from 'q';
 
 /*
 Design Document (erforderlich um die Query zu ermöglichen!!)
 {
-  "_id": "_design/telemetry",
+  "_id": "_design/image",
   "views": {
     "allDocuments": {
-      "map": "function(doc){ if (doc.data.type === 'telemetry'){ emit(doc._id, doc._rev, doc.data.timestamp)}}"
+      "map": "function(doc){ if (doc.data.type === 'image'){ emit(doc._id, doc._rev, doc.data.timestamp)}}"
     }
   }
 }
+
 */
 
+
 @Injectable()
-export class TelemetryService {
+export class ImageService {
   dataSubject: any = new Subject();
 
   constructor(public dataService: DatabaseConnectorService) {
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
+      console.log('ImageService constructor');
       this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
           console.log('ONCHANGE ' + JSON.stringify(change));
           this.emitData();
@@ -34,7 +37,7 @@ export class TelemetryService {
   }
 
   emitData(): void {
-    this.dataService.localDb.query('telemetry/allDocuments/')
+    this.dataService.localDb.query('image/allDocuments/')
       .then((data) => {
         const dataset = data.rows.map(row => {
           return row.id;
@@ -46,10 +49,10 @@ export class TelemetryService {
     });
   }
 
-  getTelemetryById(id: string): Promise<TelemetryInternal> {
+  getImageById(id: string): Promise<Image> {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
-        return <TelemetryInternal>doc.data;
+        return <Image>doc.data;
     })
     .catch((error) => {console.log(error); });
   }
