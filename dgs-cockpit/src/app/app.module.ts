@@ -11,8 +11,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ChartsModule } from 'ng2-charts';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NgModel } from "@angular/forms";
+import { NgModel } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -29,7 +30,8 @@ import { DatabaseConnectorService} from './services/database-connector/database-
 import { TelemetryService } from './services/telemetry.service';
 import { ImageService } from './services/image.service';
 import { LogService } from './services/log.service';
-
+import { MapComponent } from './map/map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { LogService } from './services/log.service';
     SelectionComponent,
     HistoryComponent,
     LogComponent,
-    NgModel
+    NgModel,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -60,6 +63,8 @@ import { LogService } from './services/log.service';
     ChartsModule,
     MatSlideToggleModule,
     MatCheckboxModule,
+    FlexLayoutModule,
+    LeafletModule,
   ],
   providers: [DatabaseConnectorService, TelemetryService, LogService, ImageService],
   bootstrap: [AppComponent]

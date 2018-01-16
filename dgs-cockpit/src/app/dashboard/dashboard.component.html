@@ -1,37 +1,5 @@
-<div class="card-container">
-  <mat-card class="card-item">
-    <mat-accordion multi="true">
-
-      <mat-expansion-panel expanded="true">
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            Übersicht
-          </mat-panel-title>
-          <mat-panel-description>
-            Das wichtigste auf einen Blick
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <app-picture></app-picture>
-
-      </mat-expansion-panel>
-
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-          </mat-panel-title>
-          <mat-panel-description>
-            Zeige alle Daten an.
-          </mat-panel-description>
-        </mat-expansion-panel-header>
-
-        <app-telemetry></app-telemetry>
-
-      </mat-expansion-panel>
-
-    </mat-accordion>
-  </mat-card>
-
+<div class="dashboard-container" fxLayout="column" fxLayout.xs="column" fxFlexFill>
+  <app-picture fxFlex="grow"></app-picture>
+  <app-telemetry fxFlex="grow"></app-telemetry>
   <app-timeline></app-timeline>
-
 </div>

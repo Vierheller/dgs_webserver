@@ -5,7 +5,7 @@ import PouchDB, { emit } from 'pouchdb';
 export class DatabaseConnectorService {
   public localDb: any;
   private remoteDb: any;
-  private remote = 'http://admin:admin@192.168.0.108:5984/dgs';
+  private remote = 'http://admin:admin@127.0.0.1:5984/dgs';
 
   constructor() {
 

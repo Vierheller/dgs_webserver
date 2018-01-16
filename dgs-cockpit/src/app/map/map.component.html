@@ -1,0 +1,26 @@
+<div class="card" fxLayout="column" fxLayout.xs="column" fxFlexFill>
+    <div class="card-body">
+      <div class="row">
+        <form class="col">
+          <button type="button"
+              class="btn btn-primary"
+              (click)="addMarker()">Add Marker</button>
+          <button type="button"
+              class="btn btn-primary"
+              (click)="removeMarker()">Remove Marker</button>
+        </form>
+      </div>
+      <div class="row">
+        <label class="col col-form-label">{{markers?.length}} Markers</label>
+      </div>
+  
+      <!-- Map style="height: 300px;"-->
+      <div leaflet style="height: 500px;"
+         [leafletOptions]="options"
+         [leafletLayers]="markers">
+      </div>
+  
+    </div>
+  
+  </div>
+  
