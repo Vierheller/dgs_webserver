@@ -1,3 +1,6 @@
-<p>
-  In diesem Bereich werden die empfangenen Logs ausgegeben.
-</p>
+<mat-list>
+  <mat-list-item *ngFor="let line of logList">
+    <mat-icon mat-list-icon>folder</mat-icon>
+    <p mat-line> {{line.timestamp}} : {{line.data}} </p>
+  </mat-list-item>
+ </mat-list>

@@ -14,6 +14,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgModel } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -59,6 +61,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     MatExpansionModule,
     MatSliderModule,
     MatTableModule,
+    MatListModule,
+    MatIconModule,
     MatGridListModule,
     ChartsModule,
     MatSlideToggleModule,
