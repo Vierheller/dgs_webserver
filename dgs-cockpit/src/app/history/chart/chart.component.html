@@ -1,4 +1,4 @@
-<div class="chart-container" style="position: relative; height:auto; width:80vh">
+<!--<div class="chart-container" style="position: relative; height:auto; width:80vh">
 <canvas baseChart
         [datasets]="lineChartData"
         [labels]="lineChartLabels"
@@ -9,4 +9,25 @@
         (chartHover)="chartHovered($event)"
         (chartClick)="chartClicked($event)">
 </canvas>
-</div>
+</div>-->
+<ngx-charts-line-chart ng-if="show"
+  [view]="view"
+  class="chart-container"
+  [scheme]="colorScheme"
+  schemeType="ordinal"
+  [results]="chartData"
+  legend="true"
+  (legendLabelClick)="onLegendLabelClick($event)"
+  gradient="false"
+  xAxis="true"
+  yAxis="true"
+  showXAxisLabel="true"
+  showYAxisLabel="true"
+  xAxisLabel="Zeit"
+  yAxisLabel="Wert"
+  autoScale="true"
+  timeline="true"
+  showGridLines="true"
+  [curve]="curve"
+  (select)="select($event)">
+</ngx-charts-line-chart>

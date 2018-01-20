@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
+import {Http} from '@angular/http';
+import * as d3 from 'd3';
+import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
+import { TelemetryService } from '../../services/telemetry.service';
+import { TelemetryInternal } from '../../models/Telemetry';
 
 @Component({
   selector: 'app-chart',
@@ -7,6 +12,108 @@ import { Component } from '@angular/core';
 })
 
 export class ChartComponent {
+  chartData: Series[];
+  newChartData: Series[];
+
+  altSeries = new Array<SeriesEntry>();
+  tempSeries = new Array<SeriesEntry>();
+  speedSeries = new Array<SeriesEntry>();
+  pressureSeries = new Array<SeriesEntry>();
+  show: Boolean;
+  view = [1000, 500];
+  public visible = false;
+  // line interpolation
+  curveType = 'Linear';
+  curve = d3.curveLinear;
+  colorScheme: any;
+  schemeType = 'ordinal';
+  selectedColorScheme: string;
+
+  constructor(private telSvc: TelemetryService) {
+    this.show = false;
+    this.setColorScheme('cool');
+    this.chartData = new Array<Series>();
+    this.newChartData = new Array<Series>();
+    //this.newChartData.push(new Series('Höhe', this.altSeries));
+    this.newChartData.push(new Series('Temperatur', this.tempSeries));
+    //this.newChartData.push(new Series('Druck', this.pressureSeries));
+    //this.newChartData.push(new Series('Geschwindigkeit', this.speedSeries));
+
+    /*this.telSvc.getData().subscribe((data) => {
+      for (let index = 0; index < data.length; index++) {
+        this.telSvc.getTelemetryById(data[index])
+          .then((tele) => {
+            this.createSeriesFromTelemetry(tele);
+          });
+      }
+    });*/
+
+    for (let index = 0; index < 100; index++) {
+      this.tempSeries.push(new SeriesEntry(new Date(Date.now()-1000*(100-index)), Math.floor(Math.random() * (50 - -50)) + -50));
+    }
+    this.chartData = this.newChartData;
+  }
+
+  ngOnInit(): void {
+    this.show = true;
+  }
+
+  createSeriesFromTelemetry(tele: TelemetryInternal) {
+    const telDate = new Date(tele.timestamp);
+    // this.newChartData[1].series.push(new SeriesEntry(telDate, tele.temp_extern));
+    this.newChartData[0].series.push(new SeriesEntry(telDate, tele.alt));
+    // this.newChartData[3].series.push(new SeriesEntry(telDate, tele.speed));
+    // this.newChartData[2].series.push(new SeriesEntry(telDate, tele.pressure));
+    this.chartData = this.chartData.concat(this.newChartData);
+  }
+
+  select(data): void {
+    console.log('Item clicked', data);
+  }
+
+  setInterpolationType(curveType) {
+    this.curveType = curveType;
+    if (curveType === 'Basis') {
+      this.curve = d3.curveBasis;
+    }
+    if (curveType === 'Cardinal') {
+      this.curve = d3.curveCardinal;
+    }
+    if (curveType === 'Catmull Rom') {
+      this.curve = d3.curveCatmullRom;
+    }
+    if (curveType === 'Linear') {
+      this.curve = d3.curveLinear;
+    }
+    if (curveType === 'Monotone X') {
+      this.curve = d3.curveMonotoneX;
+    }
+    if (curveType === 'Monotone Y') {
+      this.curve = d3.curveMonotoneY;
+    }
+    if (curveType === 'Natural') {
+      this.curve = d3.curveNatural;
+    }
+    if (curveType === 'Step') {
+      this.curve = d3.curveStep;
+    }
+    if (curveType === 'Step After') {
+      this.curve = d3.curveStepAfter;
+    }
+    if (curveType === 'Step Before') {
+      this.curve = d3.curveStepBefore;
+    }
+  }
+
+  setColorScheme(name) {
+    this.selectedColorScheme = name;
+    this.colorScheme = ngxChartsColorsets.find(s => s.name === name);
+  }
+
+  onLegendLabelClick(entry) {
+    console.log('Legend clicked', entry);
+  }
+  /*
   // lineChart
   public lineChartData:Array<any> = [
     {data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A'},
@@ -64,6 +171,12 @@ export class ChartComponent {
 
   public chartHovered(e:any):void {
     console.log(e);
-  }
+  }*/
+}
+export class SeriesEntry {
+  constructor(public name: string | Date, public value: number) {}
 }
 
+export class Series {
+  constructor(public name: string, public series: SeriesEntry[]) {}
+}

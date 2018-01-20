@@ -21,7 +21,10 @@ export class LogComponent implements OnInit {
 
         this.logSvc.getLogById(data[index])
           .then((line) => {
-            this.logList.push(line);
+            if (this.logList.indexOf(line) !== -1) {
+              this.logList.push(line);
+              this.logList.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+            }
           });
       }
     });

@@ -1,45 +1,71 @@
-import { Component, OnInit } from '@angular/core';
-import { icon, latLng, Layer, marker, tileLayer, LatLng } from 'leaflet';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+// tslint:disable-next-line:max-line-length
+import {MapsManagerService, MapLayerProviderOptions, AcMapComponent, ViewerConfiguration, CameraService, AcNotification, AcPointComponent, AcLayerComponent} from 'angular-cesium';
+import { Observable } from 'rxjs/Observable';
+import { CesiumProviderService } from '../services/cesium-provider/cesium-provider.service';
+import { SceneMode } from 'angular-cesium/src/angular-cesium/models/scene-mode.enum';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  providers: [MapsManagerService, ViewerConfiguration]
 })
 export class MapComponent implements OnInit {
-  // Open Street Map definitions
-  LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: 'Open Street Map' });
+  @ViewChild(AcLayerComponent) layer: AcLayerComponent;
+  private osmProvider: MapLayerProviderOptions;
+  private map: AcMapComponent;
+  private cameraService: CameraService;
+  points: Observable<AcNotification>;
+  show = true;
+  // tslint:disable-next-line:max-line-length
+  constructor(private mapsManagerService: MapsManagerService, private viewerConf: ViewerConfiguration, private cesiumProviderService: CesiumProviderService) {
 
-  // Values to bind to Leaflet Directive
-  options = {
-    layers: [ this.LAYER_OSM ],
-    zoom: 10,
-    center: latLng(49.49671, 8.47955)
-  };
+    viewerConf.viewerOptions = {
+      selectionIndicator : false,
+      timeline : false,
+      infoBox : false,
+      fullscreenButton : false,
+      baseLayerPicker : false,
+      animation : false,
+      homeButton : true,
+      geocoder : false,
+      navigationHelpButton : false,
+      navigationInstructionsInitiallyVisible : false,
+      imageryProvider: undefined
+    };
 
-  markers: Layer[] = [];
+    viewerConf.viewerModifier = (viewer: any) => {
+      viewer.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+      viewer.bottomContainer.remove();
+    };
 
-  addMarker(position: LatLng) {
-    const newMarker = marker(
-    [ 49.49671 + 0.1 * (Math.random() - 0.5), 8.47955 + 0.1 * (Math.random() - 0.5) ],
-      {
-          icon: icon({
-          iconSize: [ 25, 41 ],
-          iconAnchor: [ 13, 41 ],
-          iconUrl: '../assets/ic_burst_mode_black_24dp.png'
-        })
-      }
-    );
-    this.markers.push(newMarker);
+    this.osmProvider = MapLayerProviderOptions.OpenStreetMap;
   }
-
-  removeMarker() {
-    this.markers.pop();
-  }
-
-  constructor() { }
 
   ngOnInit() {
+    this.points = this.cesiumProviderService.get();
+  }
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngAfterViewInit() {
+    this.map = this.mapsManagerService.getMap();
+    console.log('FOUND MAP' + this.map.getId());
+  }
+
+  onClickMe() {
+    /*if (!this.cameraService) {
+      this.cameraService = this.mapsManagerService.getMap().getCameraService();
+    }
+    this.cameraService.cameraFlyTo({
+      destination : Cesium.Cartesian3.fromDegrees(8.50, 49.51874, 5000),
+      orientation : {
+          heading : Cesium.Math.toRadians(0),
+          pitch : Cesium.Math.toRadians(-45.0),
+          roll : 0.0
+      }
+    });*/
+    this.points = this.cesiumProviderService.get();
   }
 
 }

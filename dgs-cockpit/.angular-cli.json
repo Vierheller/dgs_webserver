@@ -9,7 +9,8 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon.ico"
+        "favicon.ico",
+        { "glob": "**/*", "input": "../node_modules/cesium/Build/Cesium", "output": "./assets/cesium" }
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -21,9 +22,12 @@
       "styles": [
         "styles.css",
         "../node_modules/material-design-icons/iconfont/material-icons.css",
-        "../node_modules/leaflet/dist/leaflet.css"
+        "../node_modules/cesium/Build/Cesium/Widgets/widgets.css",
+        "../node_modules/@swimlane/ngx-charts/release/index.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/cesium/Build/Cesium/Cesium.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

@@ -14,8 +14,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgModel } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatListModule} from '@angular/material/list';
-import {MatIconModule} from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { AngularCesiumModule, MapEventsManagerService, MapsManagerService, ViewerConfiguration, CameraService } from 'angular-cesium';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -33,7 +34,8 @@ import { TelemetryService } from './services/telemetry.service';
 import { ImageService } from './services/image.service';
 import { LogService } from './services/log.service';
 import { MapComponent } from './map/map.component';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CesiumProviderService } from './services/cesium-provider/cesium-provider.service';
 
 @NgModule({
   declarations: [
@@ -68,9 +70,20 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     MatSlideToggleModule,
     MatCheckboxModule,
     FlexLayoutModule,
-    LeafletModule,
+    NgxChartsModule,
+    AngularCesiumModule.forRoot()
   ],
-  providers: [DatabaseConnectorService, TelemetryService, LogService, ImageService],
+  providers: [
+    DatabaseConnectorService,
+    TelemetryService,
+    LogService,
+    ImageService,
+    //MapEventsManagerService,
+    //MapsManagerService,
+    //ViewerConfiguration,
+    //CameraService,
+    CesiumProviderService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
