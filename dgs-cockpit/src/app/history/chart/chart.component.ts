@@ -34,41 +34,40 @@ export class ChartComponent {
     this.setColorScheme('cool');
     this.chartData = new Array<Series>();
     this.newChartData = new Array<Series>();
-    //this.newChartData.push(new Series('Höhe', this.altSeries));
+    this.newChartData.push(new Series('Höhe', this.altSeries));
     this.newChartData.push(new Series('Temperatur', this.tempSeries));
-    //this.newChartData.push(new Series('Druck', this.pressureSeries));
-    //this.newChartData.push(new Series('Geschwindigkeit', this.speedSeries));
+    this.newChartData.push(new Series('Druck', this.pressureSeries));
+    this.newChartData.push(new Series('Geschwindigkeit', this.speedSeries));
 
-    /*this.telSvc.getData().subscribe((data) => {
+    this.telSvc.getData().subscribe((data) => {
       for (let index = 0; index < data.length; index++) {
         this.telSvc.getTelemetryById(data[index])
           .then((tele) => {
             this.createSeriesFromTelemetry(tele);
           });
       }
-    });*/
-
-    for (let index = 0; index < 100; index++) {
-      this.tempSeries.push(new SeriesEntry(new Date(Date.now()-1000*(100-index)), Math.floor(Math.random() * (50 - -50)) + -50));
-    }
-    this.chartData = this.newChartData;
+    });
   }
 
   ngOnInit(): void {
     this.show = true;
   }
+  onClickMe(){
+    this.chartData = this.newChartData;
+  }
 
   createSeriesFromTelemetry(tele: TelemetryInternal) {
     const telDate = new Date(tele.timestamp);
-    // this.newChartData[1].series.push(new SeriesEntry(telDate, tele.temp_extern));
+    console.log('Chart Data '+tele.temp_extern+' '+tele.alt+' '+tele.speed+' '+tele.pressure);
+    this.newChartData[1].series.push(new SeriesEntry(telDate, tele.temp_extern));
     this.newChartData[0].series.push(new SeriesEntry(telDate, tele.alt));
-    // this.newChartData[3].series.push(new SeriesEntry(telDate, tele.speed));
-    // this.newChartData[2].series.push(new SeriesEntry(telDate, tele.pressure));
-    this.chartData = this.chartData.concat(this.newChartData);
+    this.newChartData[3].series.push(new SeriesEntry(telDate, tele.speed));
+    this.newChartData[2].series.push(new SeriesEntry(telDate, tele.pressure));
   }
 
   select(data): void {
     console.log('Item clicked', data);
+    this.chartData = this.newChartData;
   }
 
   setInterpolationType(curveType) {
