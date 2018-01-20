@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
+  selectedItem: string;
+
   constructor() { }
 
   ngOnInit() {
+    this.selectedItem = 'dashboard';
   }
-
 }

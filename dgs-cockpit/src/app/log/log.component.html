@@ -1,6 +1,3 @@
-<mat-list>
-  <mat-list-item *ngFor="let line of logList">
-    <mat-icon mat-list-icon>folder</mat-icon>
-    <p mat-line> {{line.timestamp}} : {{line.data}} </p>
-  </mat-list-item>
- </mat-list>
+<ul class="list-group">
+  <li *ngFor="let line of logList" class="list-group-item">{{line.timestamp}} : {{line.data}}</li>
+</ul>

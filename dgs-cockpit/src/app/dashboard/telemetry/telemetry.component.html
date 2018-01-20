@@ -1,29 +1,24 @@
-<mat-expansion-panel fxLayout="column" fxLayout.xs="column" fxFlexFill>
-  <mat-expansion-panel-header>
-    <mat-panel-title>
-    </mat-panel-title>
-    <mat-panel-description>
-      Zeige alle Daten an.
-    </mat-panel-description>
-  </mat-expansion-panel-header>
+<p>
+  <button (click)="this.showOrHideTelemetry()" class="collapse-telemetry btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseTelemetry" aria-expanded="false" aria-controls="collapseExample">
+    {{this.collapseText}}
+  </button>
+</p>
 
+<div class="collapse {{this.collapseState}}" id="collapseTelemetry">
 
-  <div class="example-container mat-elevation-z8">
-    <mat-table #table [dataSource]="dataSource">
-      <!-- Parameter Column -->
-      <ng-container matColumnDef="parameter">
-        <mat-header-cell *matHeaderCellDef> Parameter </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.parameter}} </mat-cell>
-      </ng-container>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Wert</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let item of this.lastTelemetryConverted">
+      <td>{{item.parameter}}</td>
+      <td>{{item.value}}</td>
+    </tr>
+    </tbody>
+  </table>
 
-      <!-- Value Column -->
-      <ng-container matColumnDef="value">
-        <mat-header-cell *matHeaderCellDef> Wert </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.value}} </mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  </div>
-</mat-expansion-panel>
+</div>

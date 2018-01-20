@@ -1,4 +1,10 @@
-.mat-table {
-  overflow: auto;
-  max-height: 500px;
+.collapse-telemetry {
+  width: 100%;
+  text-align: center;
+  margin-left: 0px;
+}
+
+table.table th, table.table td {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
 }
