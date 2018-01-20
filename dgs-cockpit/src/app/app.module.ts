@@ -1,21 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material';
-import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatTableModule } from '@angular/material/table';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { ChartsModule } from 'ng2-charts';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NgModel } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
 import { AngularCesiumModule, MapEventsManagerService, MapsManagerService, ViewerConfiguration, CameraService } from 'angular-cesium';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
@@ -58,20 +46,8 @@ import { CesiumProviderService } from './services/cesium-provider/cesium-provide
   imports: [
     MDBBootstrapModule.forRoot(),
     BrowserModule,
-    MatButtonModule,
-    MatTabsModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatSliderModule,
-    MatTableModule,
-    MatListModule,
-    MatIconModule,
-    MatGridListModule,
     ChartsModule,
-    MatSlideToggleModule,
-    MatCheckboxModule,
     FlexLayoutModule,
     NgxChartsModule,
     AngularCesiumModule.forRoot()
