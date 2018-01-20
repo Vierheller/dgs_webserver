@@ -17,6 +17,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { AngularCesiumModule, MapEventsManagerService, MapsManagerService, ViewerConfiguration, CameraService } from 'angular-cesium';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -54,6 +56,7 @@ import { CesiumProviderService } from './services/cesium-provider/cesium-provide
     MapComponent
   ],
   imports: [
+    MDBBootstrapModule.forRoot(),
     BrowserModule,
     MatButtonModule,
     MatTabsModule,
@@ -84,6 +87,7 @@ import { CesiumProviderService } from './services/cesium-provider/cesium-provide
     //CameraService,
     CesiumProviderService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [ NO_ERRORS_SCHEMA ]
 })
 export class AppModule { }

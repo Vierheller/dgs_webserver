@@ -16,5 +16,6 @@
       "dom"
     ],
     "allowSyntheticDefaultImports": true
-  }
+  },
+  "include": ["node_modules/angular-bootstrap-md/**/*.ts",  "src/**/*.ts"]
 }
