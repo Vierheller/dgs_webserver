@@ -12,17 +12,9 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>Höhe</td>
-        <td>{{this.lastTelemetry.alt}} m</td>
-      </tr>
-      <tr>
-        <td>Temperatur (draußen)</td>
-        <td>{{this.lastTelemetry.temp_extern}} °C</td>
-      </tr>
-      <tr>
-        <td>Geschwindigkeit</td>
-        <td>{{this.lastTelemetry.speed}} km/h</td>
+      <tr *ngFor="let item of this.smallTelemetryOutput">
+        <td>{{item.parameter}}</td>
+        <td>{{item.value + ' ' + item.unit}}</td>
       </tr>
       </tbody>
     </table>

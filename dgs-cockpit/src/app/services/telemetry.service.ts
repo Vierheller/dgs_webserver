@@ -3,6 +3,7 @@ import { DatabaseConnectorService } from './database-connector/database-connecto
 import { Subject } from 'rxjs/Subject';
 import { TelemetryInternal } from '../models/Telemetry';
 import { Promise } from 'q';
+import {TelemetryObject} from "../models/objects/TelemetryObject";
 
 /*
 Design Document (erforderlich um die Query zu ermöglichen!!)
@@ -47,10 +48,10 @@ export class TelemetryService {
     });
   }
 
-  getTelemetryById(id: string): Promise<TelemetryInternal> {
+  getTelemetryById(id: string): Promise<TelemetryObject> {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
-        return <TelemetryInternal>doc.data;
+        return new TelemetryObject(doc.data);
     })
     .catch((error) => {console.log(error); });
   }

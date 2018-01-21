@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
-import {TelemetryObject} from "../../models/objects/TelemetryObject";
+import {TelemetryElement, TelemetryObject} from "../../models/objects/TelemetryObject";
 
 @Component({
   selector: 'app-telemetry',
@@ -12,7 +12,7 @@ export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
   lastTelemetry: TelemetryObject;
-  lastTelemetryConverted = new Array<TelemetryElement>();
+  lastTelemetryOutput = new Array<TelemetryElement>();
 
   constructor(private telemetrieService: TelemetryService) { }
 
@@ -23,21 +23,37 @@ export class TelemetryComponent implements OnInit {
     this.telemetrieService.getData().subscribe((data) => {
       this.telemetrieService.getTelemetryById(data[data.length - 1])
           .then((tele) => {
-            this.lastTelemetry = <TelemetryObject> tele;
-            this.convertTelemetryToElement();
+            this.lastTelemetry = tele;
+            this.generateTelemetryToOutput();
           });
     });
   }
 
-  // convert telemetry data to key-value pairs for UI
-  convertTelemetryToElement() {
-    this.lastTelemetryConverted = [];
-
-    for (const p in this.lastTelemetry) {
-      if (this.lastTelemetry.hasOwnProperty(p) ) {
-         this.lastTelemetryConverted.push({parameter: p, value: this.lastTelemetry[p]});
-      }
-    }
+  // build list for UI
+  generateTelemetryToOutput() {
+    this.lastTelemetryOutput = [
+      this.lastTelemetry.getClass(),
+      this.lastTelemetry.getIndex(),
+      this.lastTelemetry.getChannel(),
+      this.lastTelemetry.getPayload(),
+      this.lastTelemetry.getPackageCounter(),
+      this.lastTelemetry.getTime(),
+      this.lastTelemetry.getLat(),
+      this.lastTelemetry.getLon(),
+      this.lastTelemetry.getAlt(),
+      this.lastTelemetry.getSpeed(),
+      this.lastTelemetry.getDirection(),
+      this.lastTelemetry.getSatellites(),
+      this.lastTelemetry.getTempChip(),
+      this.lastTelemetry.getBatteryVoltage(),
+      this.lastTelemetry.getCurrentVoltage(),
+      this.lastTelemetry.getTempCase(),
+      this.lastTelemetry.getPressure(),
+      this.lastTelemetry.getHumidity(),
+      this.lastTelemetry.getTempExtern(),
+      this.lastTelemetry.getTimestamp(),
+      this.lastTelemetry.getType(),
+    ];
   }
 
   showOrHideTelemetry() {
@@ -51,7 +67,3 @@ export class TelemetryComponent implements OnInit {
   }
 }
 
-export interface TelemetryElement {
-  value: string;
-  parameter: string;
-}
