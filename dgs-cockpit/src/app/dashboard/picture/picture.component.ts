@@ -23,7 +23,7 @@ export class PictureComponent implements OnInit {
     this.telemetrieService.getData().subscribe((data) => {
       this.telemetrieService.getTelemetryById(data[data.length - 1])
         .then((tele) => {
-          this.lastTelemetry = tele;
+          this.lastTelemetry = <TelemetryObject> tele;
         });
     });
   }
