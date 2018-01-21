@@ -1,3 +1,2 @@
 [submodule "dgs-cockpit/src/app/models"]
-	path = dgs-cockpit/src/app/models
 	url = https://github.com/Vierheller/dgs_lora_model.git
