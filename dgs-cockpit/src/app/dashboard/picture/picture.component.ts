@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {TelemetryService} from "../../services/telemetry.service";
+import {TelemetryObject} from "../../models/objects/TelemetryObject";
 
 @Component({
   selector: 'app-picture',
@@ -8,22 +9,22 @@ import {MatTableDataSource} from '@angular/material';
 })
 export class PictureComponent implements OnInit {
 
-  displayedColumns = ['parameter', 'value'];
-  dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+  lastTelemetry: TelemetryObject;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private telemetrieService: TelemetryService) {
+    this.lastTelemetry = new TelemetryObject();
   }
 
-}
-export interface Element {
-  value: string;
-  parameter: string;
-}
+  ngOnInit() {
+    this.getLastTelemetryData();
+  }
 
-const ELEMENT_DATA: Element[] = [
-  {parameter: 'Höhe', value: '11.324 m'},
-  {parameter: 'Geschwindigkeit (über Grund)', value: '48 km/h'},
-  {parameter: 'Steigen', value: '5,3 m/s'},
-];
+  getLastTelemetryData() {
+    this.telemetrieService.getData().subscribe((data) => {
+      this.telemetrieService.getTelemetryById(data[data.length - 1])
+        .then((tele) => {
+          this.lastTelemetry = tele;
+        });
+    });
+  }
+}

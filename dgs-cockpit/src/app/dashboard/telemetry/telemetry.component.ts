@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
-import { TelemetryInternal } from '../../models/Telemetry';
+import {TelemetryObject} from "../../models/objects/TelemetryObject";
 
 @Component({
   selector: 'app-telemetry',
@@ -11,18 +11,18 @@ import { TelemetryInternal } from '../../models/Telemetry';
 export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
-  lastTelemetry: TelemetryInternal;
+  lastTelemetry: TelemetryObject;
   lastTelemetryConverted = new Array<TelemetryElement>();
 
   constructor(private telemetrieService: TelemetryService) { }
 
   ngOnInit() {
+    this.lastTelemetry = new TelemetryObject();
     this.collapseText = 'Parameter einblenden';
 
     this.telemetrieService.getData().subscribe((data) => {
       this.telemetrieService.getTelemetryById(data[data.length - 1])
           .then((tele) => {
-            console.log(tele);
             this.lastTelemetry = tele;
             this.convertTelemetryToElement();
           });
@@ -38,8 +38,6 @@ export class TelemetryComponent implements OnInit {
          this.lastTelemetryConverted.push({parameter: p, value: this.lastTelemetry[p]});
       }
     }
-
-    console.log(this.lastTelemetryConverted);
   }
 
   showOrHideTelemetry() {

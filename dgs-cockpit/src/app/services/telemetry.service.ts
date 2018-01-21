@@ -27,6 +27,7 @@ export class TelemetryService {
           this.emitData();
       });
   }
+
   // Kann von aussen aufgerufen werden
   getData(): any {
     this.emitData();
