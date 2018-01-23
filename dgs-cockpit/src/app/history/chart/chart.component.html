@@ -1,9 +1,28 @@
+<!-- <div class="card">
+  <div class="card-header deep-orange lighten-1 white-text">
+    Parameter
+  </div>
+  <div class="card-body">
+    <p class="card-text">Parameter zur Anzeige auswählen.</p>
+    <input type="checkbox" id="rememberMe" name="rememberMe" [(ngModel)]="showSpeed">
+      
+      <input type="checkbox" name="showSpeed"     ngDefaultControl [(ngModel)]="showSpeed" ngDefaultControl>Geschwindigket<br>
+      <input type="checkbox" name="alt"       ngDefaultControl [(ngModel)]="showAlt">Höhe<br>
+      <input type="checkbox" name="cpuTemp"   ngDefaultControl [(ngModel)]="showCPUTemp">Temperatur: CPU<br>
+      <input type="checkbox" name="extTemp"   ngDefaultControl [(ngModel)]="showExtTemp">Termperatur: Extern<br>
+      <input type="checkbox" name="boxTemp"   ngDefaultControl [(ngModel)]="showBoxTemp">Temperatur: Box<br>
+      <input type="checkbox" name="pressure"  ngDefaultControl [(ngModel)]="showPressure">Druck<br>
+      
+    <a class="btn btn-deep-orange">Aktualisieren</a>
+  </div>
+</div>-->
+<h2>{{title}}</h2>
 <ngx-charts-line-chart ng-if="show"
   [view]="view"
   class="chart-container"
   [scheme]="colorScheme"
   schemeType="ordinal"
-  [results]="chartData"
+  [results]="currentChartData"
   legend="true"
   (legendLabelClick)="onLegendLabelClick($event)"
   gradient="false"
@@ -19,4 +38,3 @@
   [curve]="curve"
   (select)="select($event)">
 </ngx-charts-line-chart>
-<button (click)="onClickMe()">Click me!</button>

@@ -3,6 +3,7 @@ import {Http} from '@angular/http';
 import * as d3 from 'd3';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import { TelemetryService } from '../../services/telemetry.service';
+import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import { TelemetryInternal } from '../../models/Telemetry';
 
 @Component({
@@ -12,15 +13,36 @@ import { TelemetryInternal } from '../../models/Telemetry';
 })
 
 export class ChartComponent {
-  chartData: Series[];
+  @Input()  title: string;
+  @Input()  parameter: string[];
+
+  showSpeed: boolean;
+  showExtTemp: boolean;
+  showCPUTemp: boolean;
+  showBoxTemp: boolean;
+  showAlt: boolean;
+  showPressure: boolean;
+
+  currentChartData: Series[];
   newChartData: Series[];
 
-  altSeries = new Array<SeriesEntry>();
-  tempSeries = new Array<SeriesEntry>();
-  speedSeries = new Array<SeriesEntry>();
-  pressureSeries = new Array<SeriesEntry>();
-  show: Boolean;
-  view = [1000, 500];
+  altSeries: Series;
+  tempExtSeries: Series;
+  tempCPUSeries: Series;
+  tempBoxSeries: Series;
+  speedSeries: Series;
+  pressureSeries: Series;
+
+  altSerieEntrys = new Array<SeriesEntry>();
+  tempExtSerieEntrys = new Array<SeriesEntry>();
+  tempCPUSerieEntrys = new Array<SeriesEntry>();
+  tempBoxSerieEntrys = new Array<SeriesEntry>();
+  speedSerieEntrys = new Array<SeriesEntry>();
+  pressureSerieEntrys = new Array<SeriesEntry>();
+
+
+  show: boolean;
+  view = [600, 400];
   public visible = false;
   // line interpolation
   curveType = 'Linear';
@@ -32,42 +54,65 @@ export class ChartComponent {
   constructor(private telSvc: TelemetryService) {
     this.show = false;
     this.setColorScheme('cool');
-    this.chartData = new Array<Series>();
+    this.currentChartData = new Array<Series>();
     this.newChartData = new Array<Series>();
-    this.newChartData.push(new Series('Höhe', this.altSeries));
-    this.newChartData.push(new Series('Temperatur', this.tempSeries));
-    this.newChartData.push(new Series('Druck', this.pressureSeries));
-    this.newChartData.push(new Series('Geschwindigkeit', this.speedSeries));
+
+    this.altSeries = new Series('Höhe', this.altSerieEntrys);
+    this.tempExtSeries = new Series('Temperatur: Extern', this.tempExtSerieEntrys);
+    this.tempCPUSeries = new Series('Temperatur: CPU', this.tempCPUSerieEntrys);
+    this.tempBoxSeries = new Series('Temperatur: Box', this.tempCPUSerieEntrys);
+    this.speedSeries = new Series('Geschwindigkeit', this.speedSerieEntrys);
+    this.pressureSeries = new Series('Druck', this.pressureSerieEntrys);
+
+    this.newChartData.push(this.altSeries);
+    this.newChartData.push(this.tempExtSeries);
+    this.newChartData.push(this.tempCPUSeries);
+    this.newChartData.push(this.tempBoxSeries);
+    this.newChartData.push(this.speedSeries);
+    this.newChartData.push(this.pressureSeries);
 
     this.telSvc.getData().subscribe((data) => {
       for (let index = 0; index < data.length; index++) {
         this.telSvc.getTelemetryById(data[index])
-          .then((tele) => {
-            this.createSeriesFromTelemetry(tele);
+          .then((tele: TelemetryInternal) => {
+            this.createSeriesFromTelemetry(new TelemetryObject(tele));
           });
       }
     });
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
     this.show = true;
   }
-  onClickMe(){
-    this.chartData = this.newChartData;
+  onClickMe() {
+    this.currentChartData = this.newChartData;
   }
 
-  createSeriesFromTelemetry(tele: TelemetryInternal) {
+  updateChartSelection() {
+    if (!this.showAlt) { this.newChartData.splice(this.newChartData.indexOf(this.altSeries)); }
+    if (!this.showExtTemp) { this.newChartData.splice(this.newChartData.indexOf(this.tempExtSeries)); }
+    if (!this.showCPUTemp) { this.newChartData.splice(this.newChartData.indexOf(this.tempCPUSeries)); }
+    if (!this.showBoxTemp) { this.newChartData.splice(this.newChartData.indexOf(this.tempBoxSeries)); }
+    if (!this.showSpeed) { this.newChartData.splice(this.newChartData.indexOf(this.speedSeries)); }
+    if (!this.showPressure) { this.newChartData.splice(this.newChartData.indexOf(this.pressureSeries)); }
+    this.currentChartData = this.newChartData;
+  }
+
+  createSeriesFromTelemetry(tele: TelemetryObject) {
     const telDate = new Date(tele.timestamp);
-    console.log('Chart Data '+tele.temp_extern+' '+tele.alt+' '+tele.speed+' '+tele.pressure);
-    this.newChartData[1].series.push(new SeriesEntry(telDate, tele.temp_extern));
-    this.newChartData[0].series.push(new SeriesEntry(telDate, tele.alt));
-    this.newChartData[3].series.push(new SeriesEntry(telDate, tele.speed));
-    this.newChartData[2].series.push(new SeriesEntry(telDate, tele.pressure));
+
+    // this.newChartData[this.newChartData.indexOf(this.tempExtSeries)].series.push(new SeriesEntry(telDate, tele.temp_extern));
+    // this.newChartData[this.newChartData.indexOf(this.tempCPUSeries)].series.push(new SeriesEntry(telDate, tele.temp_chip));
+    // this.newChartData[this.newChartData.indexOf(this.tempBoxSeries)].series.push(new SeriesEntry(telDate, tele.temp_case));
+    // this.newChartData[this.newChartData.indexOf(this.altSeries)].series.push(new SeriesEntry(telDate, tele.alt));
+    // this.newChartData[this.newChartData.indexOf(this.pressureSeries)].series.push(new SeriesEntry(telDate, tele.pressure));
+    this.newChartData[this.newChartData.indexOf(this.speedSeries)].series.push(new SeriesEntry(telDate, tele.speed));
   }
 
   select(data): void {
     console.log('Item clicked', data);
-    this.chartData = this.newChartData;
+    this.currentChartData = this.newChartData;
   }
 
   setInterpolationType(curveType) {

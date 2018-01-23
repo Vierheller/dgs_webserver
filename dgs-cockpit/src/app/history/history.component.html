@@ -1,8 +1,8 @@
 <div class="row">
-  <div class="col-sm-4">
-    <app-selection></app-selection>
+  <div class="col-sm-3">
+    <app-selection (selectionChanged)="selectionChanged($event)"></app-selection>
   </div>
-  <div class="col-sm-8">
-    <app-chart></app-chart>
+  <div class="col-sm-4">
+      <app-chart *ngFor="let chart of activeCharts" [title]="chart.title" [parameter]="chart.parameterToDisplay"></app-chart>
   </div>
 </div>

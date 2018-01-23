@@ -4,9 +4,11 @@
   </div>
   <div class="card-body">
     <p class="card-text">Parameter zur Anzeige auswählen.</p>
-    <input type="checkbox" name="speed" value="Bike">Geschwindigket<br>
-    <input type="checkbox" name="height" value="Bike">Höhe<br>
-    <input type="checkbox" name="temperatur" value="Bike">Temperatur<br>
-    <a class="btn btn-deep-orange">Aktualisieren</a>
+    <input type="checkbox" name="showSpeed"     [checked]="showSpeed" (change) ="this.updateChartSelection($event)">Geschwindigket<br>
+    <input type="checkbox" name="showAlt"       [checked]="showAlt" (change) ="updateChartSelection($event)">Höhe<br>
+    <input type="checkbox" name="showCPUTemp"   [checked]="showCPUTemp" (change) ="updateChartSelection($event)">Temperatur: CPU<br>
+    <input type="checkbox" name="showExtTemp"   [checked]="showExtTemp" (change) ="updateChartSelection($event)">Termperatur: Extern<br>
+    <input type="checkbox" name="showBoxTemp"   [checked]="showBoxTemp" (change) ="updateChartSelection($event)">Temperatur: Box<br>
+    <input type="checkbox" name="showPressure"  [checked]="showPressure" (change) ="updateChartSelection($event)">Druck<br>
   </div>
 </div>
