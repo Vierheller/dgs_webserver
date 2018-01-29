@@ -10,7 +10,6 @@ export class TimelineComponent implements OnInit {
   timeline: boolean;
   timeState: string;
   timelineValue: number;
-  dashboardTimeline;
 
   constructor() { }
 
@@ -28,13 +27,7 @@ export class TimelineComponent implements OnInit {
     console.log(value);
   }
 
-  // switch between live or manual mode
-  toggleTimeline() {
-    this.timeline = !this.timeline;
-
-    if (this.timeState === "Live")
-      this.timeState = "Individuell";
-    else
-      this.timeState = "Live";
+  get timeValue() {
+    return this.timelineValue;
   }
 }

@@ -1,7 +1,16 @@
 <div class="row">
   <div class="col-sm-4">
-    <img src="../../../assets/default-picture.jpg" class="img-fluid" alt="Webcam der Sonde">
+    <figure *ngIf="!this.lastPicture" class="figure">
+      <img src="../../../assets/default-picture.jpg" class="figure-img img-fluid" alt="Webcam der Sonde">
+      <figcaption class="figure-caption">Noch kein Bild empfangen.</figcaption>
+    </figure>
+
+    <figure *ngIf="this.lastPicture" class="figure">
+      <img [src]="'data:image/png;base64,'+this.lastPicture.image_base64" class="figure-img img-fluid" [alt]="'Bild Nummer '+this.lastPicture.image_counter" />
+      <figcaption class="figure-caption">Bild  Nr. {{this.lastPicture.image_counter}} empfangen um {{ this.convertTimestampToTime(this.lastPicture.timestamp) }}</figcaption>
+    </figure>
   </div>
+
   <div class="col-sm-8">
 
     <table class="table table-bordered">
