@@ -41,9 +41,11 @@ export class TimelineComponent implements OnInit {
       this.timelineValue = value;
       this.telemetryService.timelineEvent.emit(this.timelineValue);    // trigger timeline event
 
-      this.telemetryService.getTelemetryById(this.telemetryList[this.timelineValue - 1]).then((tele) => {
-        this.selectedTelemetry = tele;
-      });
+      if(this.telemetryList) {
+        this.telemetryService.getTelemetryById(this.telemetryList[this.timelineValue - 1]).then((tele) => {
+          this.selectedTelemetry = tele;
+        });
+      }
     }
   }
 }

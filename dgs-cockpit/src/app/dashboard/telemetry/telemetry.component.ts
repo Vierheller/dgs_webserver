@@ -34,10 +34,12 @@ export class TelemetryComponent implements OnInit {
 
     // when custom time has been selected
     this.telemetryService.timelineEvent.subscribe((index) => {
-      this.telemetryService.getTelemetryById(this.telemetryList[index - 1]).then((tele) => {
-        this.currentTelemetry = tele;
-        this.generateTelemetryToOutput();
-      });
+      if(this.telemetryList) {
+        this.telemetryService.getTelemetryById(this.telemetryList[index - 1]).then((tele) => {
+          this.currentTelemetry = tele;
+          this.generateTelemetryToOutput();
+        });
+      }
     });
   }
 
