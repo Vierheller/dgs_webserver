@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from "../../models/objects/TelemetryObject";
+import {Promise} from "q";
 
 @Component({
   selector: 'app-telemetry',
@@ -11,48 +12,59 @@ import {TelemetryElement, TelemetryObject} from "../../models/objects/TelemetryO
 export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
-  lastTelemetry: TelemetryObject;
+  currentTelemetry: TelemetryObject;
+  telemetrieList: Promise<TelemetryObject>;
   lastTelemetryOutput = new Array<TelemetryElement>();
 
   constructor(private telemetrieService: TelemetryService) { }
 
   ngOnInit() {
-    this.lastTelemetry = new TelemetryObject();
+    this.currentTelemetry = new TelemetryObject();
     this.collapseText = 'Parameter einblenden';
 
     this.telemetrieService.getData().subscribe((data) => {
+      this.telemetrieList = data;
+
       this.telemetrieService.getTelemetryById(data[data.length - 1])
           .then((tele) => {
-            this.lastTelemetry = tele;
+            this.currentTelemetry = tele;
             this.generateTelemetryToOutput();
           });
+    });
+
+    // when custom time has been selected
+    this.telemetrieService.timelineEvent.subscribe((index) => {
+      this.telemetrieService.getTelemetryById(this.telemetrieList[index - 1]).then((tele) => {
+        this.currentTelemetry = tele;
+        this.generateTelemetryToOutput();
+      });
     });
   }
 
   // build list for UI
   generateTelemetryToOutput() {
     this.lastTelemetryOutput = [
-      this.lastTelemetry.getClass(),
-      this.lastTelemetry.getIndex(),
-      this.lastTelemetry.getChannel(),
-      this.lastTelemetry.getPayload(),
-      this.lastTelemetry.getPackageCounter(),
-      this.lastTelemetry.getTime(),
-      this.lastTelemetry.getLat(),
-      this.lastTelemetry.getLon(),
-      this.lastTelemetry.getAlt(),
-      this.lastTelemetry.getSpeed(),
-      this.lastTelemetry.getDirection(),
-      this.lastTelemetry.getSatellites(),
-      this.lastTelemetry.getTempChip(),
-      this.lastTelemetry.getBatteryVoltage(),
-      this.lastTelemetry.getCurrentVoltage(),
-      this.lastTelemetry.getTempCase(),
-      this.lastTelemetry.getPressure(),
-      this.lastTelemetry.getHumidity(),
-      this.lastTelemetry.getTempExtern(),
-      this.lastTelemetry.getTimestamp(),
-      this.lastTelemetry.getType(),
+      this.currentTelemetry.getClass(),
+      this.currentTelemetry.getIndex(),
+      this.currentTelemetry.getChannel(),
+      this.currentTelemetry.getPayload(),
+      this.currentTelemetry.getPackageCounter(),
+      this.currentTelemetry.getTime(),
+      this.currentTelemetry.getLat(),
+      this.currentTelemetry.getLon(),
+      this.currentTelemetry.getAlt(),
+      this.currentTelemetry.getSpeed(),
+      this.currentTelemetry.getDirection(),
+      this.currentTelemetry.getSatellites(),
+      this.currentTelemetry.getTempChip(),
+      this.currentTelemetry.getBatteryVoltage(),
+      this.currentTelemetry.getCurrentVoltage(),
+      this.currentTelemetry.getTempCase(),
+      this.currentTelemetry.getPressure(),
+      this.currentTelemetry.getHumidity(),
+      this.currentTelemetry.getTempExtern(),
+      this.currentTelemetry.getTimestamp(),
+      this.currentTelemetry.getType(),
     ];
   }
 

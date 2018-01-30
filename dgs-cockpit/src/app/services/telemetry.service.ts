@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
 import { Subject } from 'rxjs/Subject';
 import { TelemetryInternal } from '../models/Telemetry';
@@ -20,7 +20,7 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 @Injectable()
 export class TelemetryService {
   dataSubject: any = new Subject();
-  selectedIndex: number;
+  timelineEvent: any = new EventEmitter();
 
   constructor(public dataService: DatabaseConnectorService) {
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
@@ -55,13 +55,5 @@ export class TelemetryService {
         return new TelemetryObject(doc.data);
     })
     .catch((error) => {console.log(error); });
-  }
-
-  getSelectedIndex():number {     // for timeline selection
-    return this.selectedIndex;
-  }
-
-  setSelectedIndex(selection: number) {   // for timeline selection
-    this.selectedIndex = selection;
   }
 }
