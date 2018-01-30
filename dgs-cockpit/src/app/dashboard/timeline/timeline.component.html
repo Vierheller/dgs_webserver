@@ -3,7 +3,8 @@
     Uhrzeit auswählen
   </div>
   <div class="card-body">
-    <p class="card-text">Hier kann eine bestimmte Uhrzeit zur Anzeige ausgewählt werden.</p>
-    <input type="range" min="1" max="100" value="100" class="timeline-slider">
+    <p class="card-text" style="float:left;">Hier kann eine bestimmte Empfangszeit zur Anzeige ausgewählt werden.</p>
+    <p *ngIf="this.selectedTelemetry" class="card-text" style="float:right;">Zeit: {{this.selectedTelemetry.getTimestampConverted().value}}</p>
+    <input (input)="changeTimeSelection($event.target.value)" type="range" min="1" step="1" [max]="this.timelineMax" [value]="this.timelineValue" class="timeline-slider">
   </div>
 </div>

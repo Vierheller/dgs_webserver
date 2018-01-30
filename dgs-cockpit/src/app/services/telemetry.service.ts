@@ -20,6 +20,7 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 @Injectable()
 export class TelemetryService {
   dataSubject: any = new Subject();
+  selectedIndex: number;
 
   constructor(public dataService: DatabaseConnectorService) {
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
@@ -54,5 +55,13 @@ export class TelemetryService {
         return new TelemetryObject(doc.data);
     })
     .catch((error) => {console.log(error); });
+  }
+
+  getSelectedIndex():number {     // for timeline selection
+    return this.selectedIndex;
+  }
+
+  setSelectedIndex(selection: number) {   // for timeline selection
+    this.selectedIndex = selection;
   }
 }
