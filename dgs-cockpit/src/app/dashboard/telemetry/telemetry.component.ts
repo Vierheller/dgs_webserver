@@ -13,19 +13,19 @@ export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
   currentTelemetry: TelemetryObject;
-  telemetrieList: Promise<TelemetryObject>;
+  telemetryList: Promise<TelemetryObject>;
   lastTelemetryOutput = new Array<TelemetryElement>();
 
-  constructor(private telemetrieService: TelemetryService) { }
+  constructor(private telemetryService: TelemetryService) { }
 
   ngOnInit() {
     this.currentTelemetry = new TelemetryObject();
     this.collapseText = 'Parameter einblenden';
 
-    this.telemetrieService.getData().subscribe((data) => {
-      this.telemetrieList = data;
+    this.telemetryService.getData().subscribe((data) => {
+      this.telemetryList = data;
 
-      this.telemetrieService.getTelemetryById(data[data.length - 1])
+      this.telemetryService.getTelemetryById(data[data.length - 1])
           .then((tele) => {
             this.currentTelemetry = tele;
             this.generateTelemetryToOutput();
@@ -33,8 +33,8 @@ export class TelemetryComponent implements OnInit {
     });
 
     // when custom time has been selected
-    this.telemetrieService.timelineEvent.subscribe((index) => {
-      this.telemetrieService.getTelemetryById(this.telemetrieList[index - 1]).then((tele) => {
+    this.telemetryService.timelineEvent.subscribe((index) => {
+      this.telemetryService.getTelemetryById(this.telemetryList[index - 1]).then((tele) => {
         this.currentTelemetry = tele;
         this.generateTelemetryToOutput();
       });

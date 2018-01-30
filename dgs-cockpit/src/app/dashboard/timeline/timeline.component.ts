@@ -12,24 +12,24 @@ export class TimelineComponent implements OnInit {
 
   timelineValue: number;
   timelineMax: number;
-  telemetrieList: Promise<TelemetryObject>;
+  telemetryList: Promise<TelemetryObject>;
   selectedTelemetry: TelemetryObject;
 
-  constructor(private telemetrieService: TelemetryService) {}
+  constructor(private telemetryService: TelemetryService) {}
 
   ngOnInit() {
     this.selectedTelemetry = new TelemetryObject();
 
-    this.telemetrieService.getData().subscribe((data) => {    // get telemetry data
-      this.telemetrieService.timelineEvent.emit(data.length);
-      this.telemetrieList = data;
+    this.telemetryService.getData().subscribe((data) => {    // get telemetry data
+      this.telemetryService.timelineEvent.emit(data.length);
+      this.telemetryList = data;
 
       if(!this.timelineValue || this.timelineValue == this.timelineMax)   // auto update list
         this.timelineValue = data.length;
 
       this.timelineMax = data.length;
 
-      this.telemetrieService.getTelemetryById(data[this.timelineValue - 1]).then((tele) => {
+      this.telemetryService.getTelemetryById(data[this.timelineValue - 1]).then((tele) => {
         this.selectedTelemetry = tele;
       });
     });
@@ -39,9 +39,9 @@ export class TimelineComponent implements OnInit {
   changeTimeSelection(value: number) {
     if(value) {
       this.timelineValue = value;
-      this.telemetrieService.timelineEvent.emit(this.timelineValue);    // trigger timeline event
+      this.telemetryService.timelineEvent.emit(this.timelineValue);    // trigger timeline event
 
-      this.telemetrieService.getTelemetryById(this.telemetrieList[this.timelineValue - 1]).then((tele) => {
+      this.telemetryService.getTelemetryById(this.telemetryList[this.timelineValue - 1]).then((tele) => {
         this.selectedTelemetry = tele;
       });
     }

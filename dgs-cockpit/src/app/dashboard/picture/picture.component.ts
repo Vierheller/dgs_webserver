@@ -15,14 +15,14 @@ export class PictureComponent implements OnInit {
   lastPicture: Image;
   smallTelemetryOutput = new Array<TelemetryElement>();
 
-  constructor(private telemetrieService: TelemetryService, private imageService: ImageService) {
+  constructor(private telemetryService: TelemetryService, private imageService: ImageService) {
     this.lastTelemetry = new TelemetryObject();
   }
 
   ngOnInit() {
     // get last telemetry data
-    this.telemetrieService.getData().subscribe((data) => {
-      this.telemetrieService.getTelemetryById(data[data.length - 1])
+    this.telemetryService.getData().subscribe((data) => {
+      this.telemetryService.getTelemetryById(data[data.length - 1])
         .then((tele) => {
           this.lastTelemetry = tele;
           this.generateOutputRows();
