@@ -3,7 +3,7 @@ import { DatabaseConnectorService } from './database-connector/database-connecto
 import { Subject } from 'rxjs/Subject';
 import { TelemetryInternal } from '../models/Telemetry';
 import { Promise } from 'q';
-import {TelemetryObject} from "../models/objects/TelemetryObject";
+import {TelemetryObject} from '../models/objects/TelemetryObject';
 
 /*
 Design Document (erforderlich um die Query zu ermöglichen!!)
@@ -21,13 +21,36 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 export class TelemetryService {
   dataSubject: any = new Subject();
   timelineEvent: any = new EventEmitter();
+  public telemetryList: Array<TelemetryObject>;
 
   constructor(public dataService: DatabaseConnectorService) {
+      this.telemetryList = [];
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
-      this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+      /*this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
           console.log('ONCHANGE ' + JSON.stringify(change));
           this.emitData();
+      });*/
+
+      this.dataService.getChangeListener().subscribe(data => {
+        for (let i = 0; i < data.change.docs.length; i++) {
+          if (data.change.docs[i].data && data.change.docs[i].data.type === 'telemetry') {
+            this.telemetryList.push(new TelemetryObject(data.change.docs[i].data));
+          }
+        }
       });
+
+      this.dataService.fetch()
+        .then(result => {
+          this.telemetryList = [];
+          for (let i = 0; i < result.rows.length; i++) {
+            if (result.rows[i].doc.data && result.rows[i].doc.data.type === 'telemetry') {
+              this.telemetryList.push(new TelemetryObject(result.rows[i].doc.data));
+              console.log('Current Length: ' + this.telemetryList.length);
+            }
+          }
+        }, error => {
+            console.error(error);
+        });
   }
 
   // Kann von aussen aufgerufen werden
