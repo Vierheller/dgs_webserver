@@ -3,6 +3,7 @@
   [view]="view"
   class="chart-container"
   [scheme]="colorScheme"
+  animations="true"
   schemeType="ordinal"
   [results]="currentChartData"
   legend="true"
@@ -15,8 +16,10 @@
   xAxisLabel="Zeit"
   yAxisLabel="Wert"
   autoScale="true"
-  timeline="true"
+  timeline="false"
   showGridLines="true"
+  roundDomains="true"
+  roundEdges="true"
   [curve]="curve"
   (select)="select($event)">
 </ngx-charts-line-chart>

@@ -27,7 +27,7 @@ export class ChartComponent {
   view = [600, 400];
   public visible = false;
   // line interpolation
-  curveType = 'Linear';
+  curveType = 'Natural';
   curve = d3.curveLinear;
   colorScheme: any;
   schemeType = 'ordinal';
@@ -58,7 +58,7 @@ export class ChartComponent {
         console.log('LISTLENGTH ' + this.telemetryList.length);
         this.telemetryList.reduce((x, y) => x.findIndex(e => e.timestamp === y.timestamp) < 0 ? [...x, y] : x, []);
         console.log('LISTLENGTH ' + this.telemetryList.length);*/
-        this.newChartData.length = 0;
+        this.setInterpolationType('Natural');
         this.telSvc.telemetryList.forEach((teleObject) => {
           this.createSeriesFromTelemetry(teleObject);
         });
@@ -82,7 +82,6 @@ export class ChartComponent {
   updateChartSelection() {
     if (this.currentChartData !== this.newChartData) {
       this.currentChartData = this.newChartData;
-      console.log('DATA LENGTH ' + this.currentChartData.length);
     }
   }
 
