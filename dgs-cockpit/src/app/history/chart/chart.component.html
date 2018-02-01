@@ -1,25 +1,13 @@
 <h2>{{title}}</h2>
-<ngx-charts-line-chart ng-if="show"
-  [view]="view"
-  class="chart-container"
-  [scheme]="colorScheme"
-  animations="true"
-  schemeType="ordinal"
-  [results]="currentChartData"
-  legend="true"
-  (legendLabelClick)="onLegendLabelClick($event)"
-  gradient="false"
-  xAxis="true"
-  yAxis="true"
-  showXAxisLabel="true"
-  showYAxisLabel="true"
-  xAxisLabel="Zeit"
-  yAxisLabel="Wert"
-  autoScale="true"
-  timeline="false"
-  showGridLines="true"
-  roundDomains="true"
-  roundEdges="true"
-  [curve]="curve"
-  (select)="select($event)">
-</ngx-charts-line-chart>
+<div style="display: block">
+  <canvas mdbChart *ngIf="chartDatasets[0]"
+          [chartType]="chartType"
+          [datasets]="chartDatasets"
+          [labels]="chartLabels"
+          [colors]="chartColors"
+          [options]="chartOptions"
+          [legend]="true"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)">
+  </canvas>
+</div>

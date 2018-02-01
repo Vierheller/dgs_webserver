@@ -1,68 +1,69 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SelectionComponent } from './selection/selection.component';
-import { ViewChild } from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, Output, EventEmitter} from '@angular/core';
+import {TelemetryService} from "../services/telemetry.service";
+import {TimerObservable} from "rxjs/observable/TimerObservable";
+import {Subscription} from "rxjs/Subscription";
+import {Promise} from "q";
+import {TelemetryObject} from "../models/objects/TelemetryObject";
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css']
 })
+
 export class HistoryComponent implements OnInit {
-  showSpeed = false;
-  showExtTemp = false;
-  showCPUTemp = false;
-  showBoxTemp = false;
-  showAlt = false;
-  showPressure = false;
-  activeCharts: Chart[];
+  subscription: Subscription;
+  localTeleList: Array<TelemetryObject>;
 
-  speedChart = new Chart('Geschwindigkeit', ['speed']);
-  tempChart = new Chart('Temperatur', ['temp_extern', 'temp_case', 'temp_chip']);
-  altChart = new Chart('Höhe', ['alt']);
-  pressureChart = new Chart('Druck', ['pressure']);
+  @Output() historyUpdated = new EventEmitter<Array<ChartData>>();
 
-  constructor(private ref: ChangeDetectorRef) {
-    this.activeCharts = new Array<Chart>();
-   }
+  constructor(private telemetryService: TelemetryService) {
+    this.localTeleList = [];
+  }
 
   ngOnInit() {
+    const timer = TimerObservable.create(500, 5000);
+
+    this.subscription = timer.subscribe(t => {
+      this.telemetryService.telemetryList.forEach((data) => {
+        this.localTeleList.push(data);
+      });
+    });
   }
 
-  selectionChanged(selection: boolean[]) {
-    if (selection) {
-      this.showSpeed = selection[0];
-      this.showExtTemp = selection[1];
-      this.showCPUTemp = selection[2];
-      this.showBoxTemp = selection[3];
-      this.showAlt = selection[4];
-      this.showPressure = selection[5];
-    }
-    console.log(selection);
-    const newChart = new Array<Chart>();
-    if (this.showSpeed) {
-      newChart.push(this.speedChart);
-    }
-    if (this.showExtTemp) {
-      newChart.push(this.tempChart);
-    }
-    if (this.showAlt) {
-      newChart.push(this.altChart);
-    }
-    if (this.showPressure) {
-      newChart.push(this.pressureChart);
-    }
-    console.log(this.activeCharts.length);
-    console.log(newChart.length);
-    this.activeCharts = newChart;
-    // this.ref.detectChanges();
-  }
-}
-export class Chart {
-  title: string;
-  parameterToDisplay: string[];
+  selectionChanged(selection: string[]) {
+    const datasetList = new Array<ChartData>();
+    let dataset: ChartData;
 
-  constructor(title: string, parameterToDisplay: string[]) {
-    this.title = title;
-    this.parameterToDisplay = parameterToDisplay;
+    for(let i=0; i<selection.length; i++) {   // select all parameters
+      dataset = new ChartData(selection[i], this.getDataByName(selection[i]));
+      datasetList.push(dataset);
+    }
+
+    this.historyUpdated.emit(datasetList);
+  }
+
+  getDataByName(name: string): any[] {
+    const data = [];
+
+    for(let i=0; i<this.localTeleList.length; i++) {
+      switch(name) {
+        case 'speed':
+          data.push(this.localTeleList[i].getSpeed().value);
+      }
+    }
+
+    return data;
   }
 }
+
+export class ChartData {
+  label: string;    // exa: speed
+  data: number[];   // exa: [1, 2, 3]
+
+  constructor(label: string, data: number[]) {
+    this.label = label;
+    this.data = data;
+  }
+}
+

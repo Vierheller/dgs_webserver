@@ -3,6 +3,6 @@
     <app-selection (selectionChanged)="selectionChanged($event)"></app-selection>
   </div>
   <div class="col-sm-4">
-      <app-chart *ngFor="let chart of activeCharts" [title]="chart.title" [parameter]="chart.parameterToDisplay"></app-chart>
+      <app-chart></app-chart>
   </div>
 </div>
