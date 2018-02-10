@@ -12,6 +12,7 @@ export class SelectionComponent implements OnInit {
   showBoxTemp: boolean;
   showAlt: boolean;
   showPressure: boolean;
+  multiChart: boolean;
 
   @Output() selectionChanged = new EventEmitter<boolean[]>();
 
@@ -23,6 +24,7 @@ export class SelectionComponent implements OnInit {
     this.showBoxTemp = false;
     this.showAlt = false;
     this.showPressure = false;
+    this.multiChart = false;
    }
 
   ngOnInit() {
@@ -34,7 +36,7 @@ export class SelectionComponent implements OnInit {
         this[p] = event.target.checked;
       }
     }
-    this.selectionChanged.emit([this.showSpeed, this.showExtTemp, this.showCPUTemp, this.showBoxTemp, this.showAlt, this.showPressure]);
+    this.selectionChanged.emit([this.showSpeed, this.showExtTemp, this.showCPUTemp, this.showBoxTemp, this.showAlt, this.showPressure, this.multiChart]);
   }
 
 }

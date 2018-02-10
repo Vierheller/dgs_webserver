@@ -1,12 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { SelectionComponent } from './selection/selection.component';
-import { ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-history',
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css']
 })
+
 export class HistoryComponent implements OnInit {
   showSpeed = false;
   showExtTemp = false;
@@ -14,12 +13,14 @@ export class HistoryComponent implements OnInit {
   showBoxTemp = false;
   showAlt = false;
   showPressure = false;
+  multiMode = false;
   activeCharts: Chart[];
 
   speedChart = new Chart('Geschwindigkeit', ['speed']);
   tempChart = new Chart('Temperatur', ['temp_extern', 'temp_case', 'temp_chip']);
   altChart = new Chart('Höhe', ['alt']);
   pressureChart = new Chart('Druck', ['pressure']);
+  multiChart = new Chart('Mehrere Werte', ['']);
 
   constructor(private ref: ChangeDetectorRef) {
     this.activeCharts = new Array<Chart>();
@@ -36,27 +37,47 @@ export class HistoryComponent implements OnInit {
       this.showBoxTemp = selection[3];
       this.showAlt = selection[4];
       this.showPressure = selection[5];
+      this.multiMode = selection[6];
     }
-    console.log(selection);
+
     const newChart = new Array<Chart>();
-    if (this.showSpeed) {
-      newChart.push(this.speedChart);
+
+    if(this.multiMode) {
+      const paramToDisplay = new Array<string>();
+
+      if (this.showSpeed)
+        paramToDisplay.push('speed');
+
+      if (this.showExtTemp)
+        paramToDisplay.push('temp_extern');
+
+      if (this.showAlt)
+        paramToDisplay.push('alt');
+
+      if (this.showPressure)
+        paramToDisplay.push('pressure');
+
+      this.multiChart.parameterToDisplay = paramToDisplay;
+      newChart.push(this.multiChart);
+    } else {
+      if (this.showSpeed)
+        newChart.push(this.speedChart);
+
+      if (this.showExtTemp)
+        newChart.push(this.tempChart);
+
+      if (this.showAlt)
+        newChart.push(this.altChart);
+
+      if (this.showPressure)
+        newChart.push(this.pressureChart);
     }
-    if (this.showExtTemp) {
-      newChart.push(this.tempChart);
-    }
-    if (this.showAlt) {
-      newChart.push(this.altChart);
-    }
-    if (this.showPressure) {
-      newChart.push(this.pressureChart);
-    }
-    console.log(this.activeCharts.length);
-    console.log(newChart.length);
+
     this.activeCharts = newChart;
-    // this.ref.detectChanges();
+    //this.ref.detectChanges();
   }
 }
+
 export class Chart {
   title: string;
   parameterToDisplay: string[];
