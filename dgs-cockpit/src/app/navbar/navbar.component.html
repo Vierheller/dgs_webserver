@@ -4,16 +4,16 @@
   </logo>
   <links>
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active waves-light" mdbRippleRadius>
-        <a (click)="this.selectedItem = 'dashboard'" class="nav-link">Dashboard</a>
+      <li [ngClass]="{'active': this.selectedItem === 'dashboard'}" class="nav-item waves-light" mdbRippleRadius>
+        <a (click)="this.selectedItem = 'dashboard'" name="dashboard" class="nav-link">Dashboard</a>
       </li>
-      <li class="nav-item waves-light" mdbRippleRadius>
+      <li [ngClass]="{'active': this.selectedItem === 'map'}" class="nav-item waves-light" mdbRippleRadius>
         <a (click)="this.selectedItem = 'map'" class="nav-link">Karte</a>
       </li>
-      <li class="nav-item waves-light" mdbRippleRadius>
+      <li [ngClass]="{'active': this.selectedItem === 'history'}" class="nav-item waves-light" mdbRippleRadius>
         <a (click)="this.selectedItem = 'history'" class="nav-link">Verlauf</a>
       </li>
-      <li class="nav-item waves-light" mdbRippleRadius>
+      <li [ngClass]="{'active': this.selectedItem === 'log'}" class="nav-item waves-light" mdbRippleRadius>
         <a (click)="this.selectedItem = 'log'" class="nav-link">Log</a>
       </li>
     </ul>
