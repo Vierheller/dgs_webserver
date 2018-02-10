@@ -4,14 +4,14 @@
   </div>
   <div class="card-body">
     <p class="card-text">Parameter auswählen</p>
-    <input class="param" type="checkbox" name="showSpeed" [checked]="showSpeed" (change) ="this.updateChartSelection($event)">Geschwindigket<br>
-    <input class="param" type="checkbox" name="showAlt" [checked]="showAlt" (change) ="updateChartSelection($event)">Höhe<br>
-    <input class="param" type="checkbox" name="showCPUTemp" [checked]="showCPUTemp" (change) ="updateChartSelection($event)">Temperatur: CPU<br>
-    <input class="param" type="checkbox" name="showExtTemp" [checked]="showExtTemp" (change) ="updateChartSelection($event)">Termperatur: Extern<br>
-    <input class="param" type="checkbox" name="showBoxTemp" [checked]="showBoxTemp" (change) ="updateChartSelection($event)">Temperatur: Box<br>
-    <input class="param" type="checkbox" name="showPressure" [checked]="showPressure" (change) ="updateChartSelection($event)">Druck<br>
+    <input class="param" type="checkbox" name="speed" (change)="this.updateChartSelection($event)">Geschwindigket<br>
+    <input class="param" type="checkbox" name="alt" (change)="updateChartSelection($event)">Höhe<br>
+    <input class="param" type="checkbox" name="temp_chip" (change)="updateChartSelection($event)">Temperatur: CPU<br>
+    <input class="param" type="checkbox" name="temp_extern" (change)="updateChartSelection($event)">Termperatur: Extern<br>
+    <input class="param" type="checkbox" name="temp_case" (change)="updateChartSelection($event)">Temperatur: Box<br>
+    <input class="param" type="checkbox" name="pressure" (change)="updateChartSelection($event)">Druck<br>
     <br>
     <p class="card-text">Modus</p>
-    <input class="param" type="checkbox" name="multiChart" [checked]="multiChart" (change) ="updateChartSelection($event)">Multi<br>
+    <input class="param" type="checkbox" name="multiChart" (change)="updateChartSelection($event)">Multi<br>
   </div>
 </div>

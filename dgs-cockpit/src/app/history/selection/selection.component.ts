@@ -6,24 +6,14 @@ import { Component, EventEmitter, Output, OnInit } from '@angular/core';
   styleUrls: ['./selection.component.css']
 })
 export class SelectionComponent implements OnInit {
-  showSpeed: boolean;
-  showExtTemp: boolean;
-  showCPUTemp: boolean;
-  showBoxTemp: boolean;
-  showAlt: boolean;
-  showPressure: boolean;
   multiChart: boolean;
+  selection: string[];
 
-  @Output() selectionChanged = new EventEmitter<boolean[]>();
+  @Output() selectionChanged = new EventEmitter<any>();
 
   constructor() {
     this.updateChartSelection.bind(this);
-    this.showSpeed = false;
-    this.showExtTemp = false;
-    this.showCPUTemp = false;
-    this.showBoxTemp = false;
-    this.showAlt = false;
-    this.showPressure = false;
+    this.selection = new Array<string>();
     this.multiChart = false;
    }
 
@@ -31,12 +21,19 @@ export class SelectionComponent implements OnInit {
   }
 
   updateChartSelection(event) {
-    for (const p in this) {
-      if (p === event.target.name) {
-        this[p] = event.target.checked;
+    if(event.target.name === "multiChart")
+      this.multiChart = event.target.checked;
+
+    if(event.target.checked && event.target.name !== "multiChart") {
+      this.selection.push(event.target.name);     // add selection
+    } else {
+      const index = this.selection.indexOf(event.target.name, 0);
+      if (index > -1) {
+        this.selection.splice(index, 1);    // remove selection
       }
     }
-    this.selectionChanged.emit([this.showSpeed, this.showExtTemp, this.showCPUTemp, this.showBoxTemp, this.showAlt, this.showPressure, this.multiChart]);
+
+    this.selectionChanged.emit({'parameters': this.selection, 'multi': this.multiChart});
   }
 
 }
