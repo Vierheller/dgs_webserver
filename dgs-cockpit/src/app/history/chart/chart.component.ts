@@ -58,7 +58,7 @@ export class ChartComponent {
         console.log('LISTLENGTH ' + this.telemetryList.length);
         this.telemetryList.reduce((x, y) => x.findIndex(e => e.timestamp === y.timestamp) < 0 ? [...x, y] : x, []);
         console.log('LISTLENGTH ' + this.telemetryList.length);*/
-        this.setInterpolationType('Natural');
+        this.setInterpolationType('Basic');
         this.telSvc.telemetryList.forEach((teleObject) => {
           this.createSeriesFromTelemetry(teleObject);
         });
@@ -109,6 +109,11 @@ export class ChartComponent {
 
   select(data): void {
     console.log('Item clicked', data);
+  }
+
+  changeInterpolationType(event) {
+    if(event)
+      this.setInterpolationType(event.target.value);
   }
 
   setInterpolationType(curveType) {

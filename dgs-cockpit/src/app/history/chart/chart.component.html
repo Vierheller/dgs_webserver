@@ -1,4 +1,17 @@
 <h2>{{title}}</h2>
+<select class="type-selection" (change)="changeInterpolationType($event)">
+  <option value="Basis">Basis</option>
+  <option value="Cardinal">Kardinal</option>
+  <option value="Catmull Rom">Kurven</option>
+  <option value="Linear">Linear</option>
+  <option value="Monotone X">Monoton X</option>
+  <option value="Monotone Y">Monoton Y</option>
+  <option value="Natural">Natürlich</option>
+  <option value="Step">Stufen</option>
+  <option value="Step After">Stufen Hinten</option>
+  <option value="Step Before">Stufen Vorne</option>
+</select>
+<br>
 <ngx-charts-line-chart ng-if="show"
   [view]="view"
   class="chart-container"
