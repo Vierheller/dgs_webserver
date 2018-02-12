@@ -6,7 +6,7 @@
     </figure>
 
     <figure *ngIf="this.lastPicture" class="figure">
-      <a (click)="picDialog.show()">
+      <a (click)="picDialog.show(); onDialogOpen()">
         <img [src]="'data:image/png;base64,'+this.lastPicture.image_base64" class="figure-img img-fluid" [alt]="'Bild Nummer '+this.lastPicture.image_counter" />
       </a>
       <figcaption class="figure-caption pic-signature">Bild  Nr. {{this.lastPicture.image_counter}} empfangen um {{ this.convertTimestampToTime(this.lastPicture.timestamp) }}</figcaption>
@@ -34,11 +34,11 @@
 </div>
 
 <div mdbModal #picDialog="mdb-modal" class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div *ngIf="this.lastPicture" class="modal-dialog modal-notify modal-info" role="document">
+  <div *ngIf="this.pictureList.length > 0" class="modal-dialog modal-notify modal-info" role="document">
 
     <div class="modal-content">
       <div class="modal-header stylish-color-dark">
-        <p class="heading lead">Bild Nr. {{this.lastPicture.image_counter}}</p>
+        <p class="heading lead">Bild Nr. {{this.pictureList[this.selIndex].image_counter}}</p>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="picDialog.hide()">
           <span aria-hidden="true" class="white-text">×</span>
         </button>
@@ -46,14 +46,15 @@
 
       <div class="modal-body">
         <div class="text-center">
-          <img [src]="'data:image/png;base64,'+this.lastPicture.image_base64" class="figure-img img-fluid" [alt]="'Bild Nummer '+this.lastPicture.image_counter" />
+          <img [src]="'data:image/png;base64,'+this.pictureList[this.selIndex].image_base64" class="figure-img img-fluid" [alt]="'Bild Nummer '+this.pictureList[this.selIndex].image_counter" />
+          <div class="signature">Empfangen um {{ this.convertTimestampToTime(this.pictureList[this.selIndex].timestamp) }}</div>
         </div>
       </div>
 
-      <!--<div class="modal-footer justify-content-center">-->
-        <!--<a type="button" class="btn btn-primary unique-color btn-navigate" mdbRippleRadius>Zurück</a>-->
-        <!--<a type="button" class="btn btn-primary unique-color btn-navigate" mdbRippleRadius>Vor</a>-->
-      <!--</div>-->
+      <div class="modal-footer justify-content-center">
+        <a type="button" (click)="loadPrevPicture()" class="btn btn-primary unique-color btn-navigate" mdbRippleRadius>Zurück</a>
+        <a type="button" (click)="loadNextPicture()" class="btn btn-primary unique-color btn-navigate" mdbRippleRadius>Vor</a>
+      </div>
     </div>
   </div>
 </div>

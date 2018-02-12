@@ -31,7 +31,7 @@ export class TelemetryService {
           this.emitData();
       });*/
 
-      this.dataService.getChangeListener().subscribe(data => {
+      dataService.getChangeListener().subscribe(data => {
         for (let i = 0; i < data.change.docs.length; i++) {
           if (data.change.docs[i].data && data.change.docs[i].data.type === 'telemetry') {
             this.telemetryList.push(new TelemetryObject(data.change.docs[i].data));
@@ -39,7 +39,7 @@ export class TelemetryService {
         }
       });
 
-      this.dataService.fetch()
+      dataService.fetch()
         .then(result => {
           this.telemetryList = [];
           for (let i = 0; i < result.rows.length; i++) {
@@ -50,7 +50,7 @@ export class TelemetryService {
           }
         }, error => {
             console.error(error);
-        });
+      });
   }
 
   // Kann von aussen aufgerufen werden

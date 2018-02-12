@@ -21,15 +21,32 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 @Injectable()
 export class ImageService {
   dataSubject: any = new Subject();
+  public imageList: Array<Image>;
 
   constructor(public dataService: DatabaseConnectorService) {
-      // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
-      console.log('ImageService constructor');
-      this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-          console.log('ONCHANGE ' + JSON.stringify(change));
-          this.emitData();
+    this.imageList = [];
+
+    dataService.getChangeListener().subscribe(data => {
+      for (let i = 0; i < data.change.docs.length; i++) {
+        if (data.change.docs[i].data && data.change.docs[i].data.type === 'image') {
+          this.imageList.push(data.change.docs[i].data);
+        }
+      }
+    });
+
+    dataService.fetch()
+      .then(result => {
+        this.imageList = [];
+        for (let i = 0; i < result.rows.length; i++) {
+          if (result.rows[i].doc.data && result.rows[i].doc.data.type === 'image') {
+            this.imageList.push(result.rows[i].doc.data);
+          }
+        }
+      }, error => {
+        console.error(error);
       });
   }
+
   // Kann von aussen aufgerufen werden
   getData(): any {
     this.emitData();
