@@ -7,7 +7,7 @@
 
     <figure *ngIf="this.lastPicture" class="figure">
       <img [src]="'data:image/png;base64,'+this.lastPicture.image_base64" class="figure-img img-fluid" [alt]="'Bild Nummer '+this.lastPicture.image_counter" />
-      <figcaption class="figure-caption">Bild  Nr. {{this.lastPicture.image_counter}} empfangen um {{ this.convertTimestampToTime(this.lastPicture.timestamp) }}</figcaption>
+      <figcaption class="figure-caption pic-signature">Bild  Nr. {{this.lastPicture.image_counter}} empfangen um {{ this.convertTimestampToTime(this.lastPicture.timestamp) }}</figcaption>
     </figure>
   </div>
 
@@ -27,5 +27,6 @@
       </tr>
       </tbody>
     </table>
+    <div class="signature">Datensatz  Nr. {{this.telemetryCounter}} empfangen um {{ this.convertTimestampToTime(this.lastTelemetry.timestamp) }}</div>
   </div>
 </div>

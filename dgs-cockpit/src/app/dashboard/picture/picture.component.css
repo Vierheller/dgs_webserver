@@ -3,3 +3,12 @@
   max-height: 500px;
   width: 95%;
 }
+
+.signature {
+  font-size: 90%;
+  color: #868e96;
+}
+
+.pic-signature {
+  margin-top: 18px;
+}

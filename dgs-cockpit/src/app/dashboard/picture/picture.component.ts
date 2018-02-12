@@ -13,6 +13,7 @@ export class PictureComponent implements OnInit {
 
   lastTelemetry: TelemetryObject;
   lastPicture: Image;
+  telemetryCounter: number;
   smallTelemetryOutput = new Array<TelemetryElement>();
 
   constructor(private telemetryService: TelemetryService, private imageService: ImageService) {
@@ -22,6 +23,7 @@ export class PictureComponent implements OnInit {
   ngOnInit() {
     // get last telemetry data
     this.telemetryService.getData().subscribe((data) => {
+      this.telemetryCounter = data.length;
       this.telemetryService.getTelemetryById(data[data.length - 1])
         .then((tele) => {
           this.lastTelemetry = tele;
