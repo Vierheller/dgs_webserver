@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {TelemetryService} from "../../services/telemetry.service";
-import {TelemetryObject} from "../../models/objects/TelemetryObject";
-import {Promise} from "q";
+import {TelemetryService} from '../../services/telemetry.service';
+import {TelemetryObject} from '../../models/objects/TelemetryObject';
+import {Promise} from 'q';
 
 @Component({
   selector: 'app-timeline',
@@ -24,7 +24,7 @@ export class TimelineComponent implements OnInit {
       this.telemetryService.timelineEvent.emit(data.length);
       this.telemetryList = data;
 
-      if(!this.timelineValue || this.timelineValue == this.timelineMax)   // auto update list
+      if (!this.timelineValue || this.timelineValue == this.timelineMax)   // auto update list
         this.timelineValue = data.length;
 
       this.timelineMax = data.length;
@@ -33,11 +33,11 @@ export class TimelineComponent implements OnInit {
 
   // select telemetry data
   changeTimeSelection(value: number) {
-    if(value) {
+    if (value) {
       this.timelineValue = value;
       this.telemetryService.timelineEvent.emit(this.timelineValue);    // trigger timeline event
 
-      if(this.telemetryList) {
+      if (this.telemetryList) {
         this.telemetryService.getTelemetryById(this.telemetryList[this.timelineValue - 1]).then((tele) => {
           this.selectedTelemetry = tele;
         });

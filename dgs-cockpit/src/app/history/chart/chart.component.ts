@@ -112,7 +112,7 @@ export class ChartComponent {
   }
 
   changeInterpolationType(event) {
-    if(event)
+    if (event)
       this.setInterpolationType(event.target.value);
   }
 

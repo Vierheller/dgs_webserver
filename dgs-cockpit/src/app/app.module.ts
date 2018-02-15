@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartsModule } from 'ng2-charts';
-import { NgModel } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
@@ -39,7 +37,6 @@ import {AngularOpenlayersModule} from 'ngx-openlayers';
     SelectionComponent,
     HistoryComponent,
     LogComponent,
-    NgModel,
     MapComponent
   ],
   imports: [
@@ -47,7 +44,6 @@ import {AngularOpenlayersModule} from 'ngx-openlayers';
     BrowserModule,
     BrowserAnimationsModule,
     ChartsModule,
-    FlexLayoutModule,
     NgxChartsModule,
     AngularOpenlayersModule
   ],

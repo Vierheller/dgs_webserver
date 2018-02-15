@@ -23,20 +23,20 @@ export class HistoryComponent implements OnInit {
     if (!selection)
       return;
 
-    console.log("selection");
+    console.log('selection');
     console.log(selection);
 
-    if(!selection.parameters)
+    if (!selection.parameters)
       return;
 
     const newChart = new Array<Chart>();
 
-    if(selection.multi) {
+    if (selection.multi) {
       this.multiChart.parameterToDisplay = selection.parameters;
       newChart.push(this.multiChart);
     } else {
       selection.parameters.forEach((param) => {
-        const chart = new Chart('Single Chart '+param, [param]);
+        const chart = new Chart('Single Chart ' + param, [param]);
         newChart.push(chart);
       });
     }
