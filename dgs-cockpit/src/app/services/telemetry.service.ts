@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { TelemetryInternal } from '../models/Telemetry';
 import { Promise } from 'q';
 import {TelemetryObject} from '../models/objects/TelemetryObject';
+import { TelemetryComponent } from '../dashboard/telemetry/telemetry.component';
 
 /*
 Design Document (erforderlich um die Query zu ermöglichen!!)
@@ -73,10 +74,12 @@ export class TelemetryService {
   }
 
   getTelemetryById(id: string): Promise<TelemetryObject> {
+    if (id) {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
         return new TelemetryObject(doc.data);
     })
     .catch((error) => {console.log(error); });
+    }
   }
 }

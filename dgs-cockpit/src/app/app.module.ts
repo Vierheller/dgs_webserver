@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartsModule } from 'ng2-charts';
 import { NgModel } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AngularCesiumModule, MapEventsManagerService, MapsManagerService, ViewerConfiguration, CameraService } from 'angular-cesium';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
@@ -25,7 +24,7 @@ import { ImageService } from './services/image.service';
 import { LogService } from './services/log.service';
 import { MapComponent } from './map/map.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { CesiumProviderService } from './services/cesium-provider/cesium-provider.service';
+import {AngularOpenlayersModule} from 'ngx-openlayers';
 
 @NgModule({
   declarations: [
@@ -50,18 +49,13 @@ import { CesiumProviderService } from './services/cesium-provider/cesium-provide
     ChartsModule,
     FlexLayoutModule,
     NgxChartsModule,
-    AngularCesiumModule.forRoot()
+    AngularOpenlayersModule
   ],
   providers: [
     DatabaseConnectorService,
     TelemetryService,
     LogService,
     ImageService,
-    // MapEventsManagerService,
-    // MapsManagerService,
-    // ViewerConfiguration,
-    // CameraService,
-    CesiumProviderService
   ],
   bootstrap: [AppComponent],
   schemas: [ NO_ERRORS_SCHEMA ]

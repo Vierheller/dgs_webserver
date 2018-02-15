@@ -28,10 +28,6 @@ export class TimelineComponent implements OnInit {
         this.timelineValue = data.length;
 
       this.timelineMax = data.length;
-
-      this.telemetryService.getTelemetryById(data[this.timelineValue - 1]).then((tele) => {
-        this.selectedTelemetry = tele;
-      });
     });
   }
 
