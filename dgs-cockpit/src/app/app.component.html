@@ -3,16 +3,13 @@
 </app-navbar>
 
 <main>
-  <div class="container" style="height:1300px;">
-    <div class="row mt-5 pt-5">
-      <div class="col">
-        <app-dashboard *ngIf="this.selectedItem == 'dashboard'"></app-dashboard>
-        <app-map *ngIf="this.selectedItem == 'map'"></app-map>
-        <app-history *ngIf="this.selectedItem == 'history'"></app-history>
-        <app-log *ngIf="this.selectedItem == 'log'"></app-log>
-      </div>
-    </div>
+  <div class="container">
+    <app-dashboard *ngIf="this.selectedItem == 'dashboard'"></app-dashboard>
+    <app-map *ngIf="this.selectedItem == 'map'"></app-map>
+    <app-history *ngIf="this.selectedItem == 'history'"></app-history>
+    <app-log *ngIf="this.selectedItem == 'log'"></app-log>
   </div>
 </main>
 
 <app-footer></app-footer>
+
