@@ -12,10 +12,13 @@ export class TimelineComponent implements OnInit {
 
   timelineValue: number;
   timelineMax: number;
+  playMode: boolean;
   telemetryList: Array<TelemetryObject>;
   selectedTelemetry: TelemetryObject;
 
-  constructor(private telemetryService: TelemetryService) {}
+  constructor(private telemetryService: TelemetryService) {
+    this.playMode = false;
+  }
 
   ngOnInit() {
     this.selectedTelemetry = new TelemetryObject();
@@ -25,6 +28,7 @@ export class TimelineComponent implements OnInit {
 
       if(!this.timelineValue || this.timelineValue == this.timelineMax) { // auto update list
         this.timelineValue = teleObjects.length;
+        this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
       }
 
       this.timelineMax = teleObjects.length;
@@ -41,5 +45,17 @@ export class TimelineComponent implements OnInit {
         this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
       }
     }
+  }
+
+  playTrackedData() {
+    this.playMode = !this.playMode;   // toggle button
+
+    /*for(let i=0; i<this.telemetryList.length; i++) {
+      setTimeout(function () {
+        this.timelineValue = i;
+        this.telemetryService.timelineEvent.emit(i);
+        this.selectedTelemetry = this.telemetryList[i];
+      },2000)
+    }*/
   }
 }
