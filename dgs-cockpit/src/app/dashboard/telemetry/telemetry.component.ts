@@ -40,7 +40,7 @@ export class TelemetryComponent implements OnInit {
 
   // build list for UI
   generateTelemetryToOutput() {
-    if (this.lastTelemetryOutput) {
+    if (this.lastTelemetryOutput && this.currentTelemetry) {
       this.lastTelemetryOutput = [
         this.currentTelemetry.getClass(),
         this.currentTelemetry.getIndex(),
