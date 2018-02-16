@@ -12,10 +12,12 @@ export class DashboardComponent implements OnInit {
   currentTelemetry: TelemetryObject;
   constructor(public telemetryService: TelemetryService) {
     this.currentTelemetry = new TelemetryObject();
+
   }
 
   ngOnInit() {
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      console.log('sdadsasdasd');
       this.currentTelemetry = teleObjects[teleObjects.length - 1];
     });
   }
