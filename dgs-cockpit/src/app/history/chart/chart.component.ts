@@ -6,6 +6,7 @@ import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import {TimerObservable} from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
 import {telemetryDictonary} from '../../models/config/telemetryDic';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'app-chart',
@@ -17,26 +18,33 @@ export class ChartComponent {
   @Input()  title: string;
   @Input()  parameter: string[];
 
+  view: any[] = [700, 400];
+
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Country';
+  showYAxisLabel = true;
+  yAxisLabel = 'Population';
+  colorScheme: any;
+
   // telemetryList: TelemetryObject[];
   currentChartData: Series[];
   newChartData: Series[];
   subscription: Subscription;
   show: boolean;
-  view = [600, 400];
   public visible = false;
   // line interpolation
   curveType = 'Natural';
   curve = d3.curveLinear;
-  colorScheme: any;
   schemeType = 'ordinal';
-  selectedColorScheme: string;
 
   constructor(private telemetryService: TelemetryService) {
-    this.setColorScheme('cool');
     this.currentChartData = new Array<Series>();
     this.newChartData     = new Array<Series>();
-
-    // this.telemetryList = new Array<TelemetryObject>();
   }
 
   initChartDataSources() {
@@ -49,20 +57,23 @@ export class ChartComponent {
 
   // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
+    this.setColorScheme('natural');
     this.show = true;
+    const timer = new TimerObservable(500, 5000);
+    this.subscription = timer.subscribe((observer) => {
+      this.updateChartSelection();
+    });
+    console.log(this.telemetryService);
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
-        this.updateChartSelection();
       });
     });
-  }
-  onClickMe() {
-   // this.currentChartData = this.newChartData;
   }
 
   updateChartSelection() {
     if (this.currentChartData !== this.newChartData) {
+      console.log('Refreshing chart data');
       this.currentChartData = this.newChartData;
     }
   }
@@ -76,14 +87,14 @@ export class ChartComponent {
       for (const str of this.parameter) {
         const result = this.newChartData.find(series => series.name === str);
 
-        if(result) {
-          if(telemetryDictonary[result.name])
+        if (result) {
+          if (telemetryDictonary[result.name]) {
             result.name = telemetryDictonary[result.name].name;   // set parameter text
-
+          }
           for (const p in tele) {
             if (p === str) {
 
-              const entry = new SeriesEntry(telDate.toLocaleTimeString('de-DE'), tele[p]);
+              const entry = new SeriesEntry(telDate, tele[p]);
 
               result.series.push(entry);
             }
@@ -98,8 +109,9 @@ export class ChartComponent {
   }
 
   changeInterpolationType(event) {
-    if (event)
+    if (event) {
       this.setInterpolationType(event.target.value);
+    }
   }
 
   setInterpolationType(curveType) {
@@ -137,7 +149,6 @@ export class ChartComponent {
   }
 
   setColorScheme(name) {
-    this.selectedColorScheme = name;
     this.colorScheme = ngxChartsColorsets.find(s => s.name === name);
   }
 
@@ -147,7 +158,7 @@ export class ChartComponent {
 
   ngOnDestroy() {
     console.log('Destroy component');
-    // this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
 

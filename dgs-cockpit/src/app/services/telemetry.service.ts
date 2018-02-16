@@ -1,9 +1,11 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
-import { Subject } from 'rxjs/Subject';
 import {TelemetryObject} from '../models/objects/TelemetryObject';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/shareReplay';
 import { Promise } from 'bluebird';
 /*
 Design Document (erforderlich um die Query zu ermöglichen!!)
@@ -19,14 +21,31 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 
 @Injectable()
 export class TelemetryService {
-  telemetryIDsSubject: Subject<Array<String>> = new Subject();
+  private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
+  private telemetryIDsObservable: Observable<Array<String>>;
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
   public telemetryList: Array<TelemetryObject>;
   timelineEvent: EventEmitter<number> = new EventEmitter();
 
+
   constructor(public dataService: DatabaseConnectorService) {
-      this.telemetryList = [];
-      this.telemetriesObservable = this.telemetryIDsSubject.flatMap((ids) => {
+      this.telemetryIDsObservable = this.reloadSubject.flatMap(_ => {
+        return Observable.create(subscriber => {
+          this.dataService.localDb.query('telemetry/allDocuments/')
+          .then((data) => {
+            const dataset = data.rows.map(row => {
+              return row.id;
+            });
+            subscriber.next(dataset);
+            subscriber.complete();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        });
+      }).shareReplay() as Observable<Array<String>>;
+
+      this.telemetriesObservable = this.telemetryIDsObservable.flatMap((ids) => {
         return Observable.create(subscriber => {
           const promises: Array<Promise<any>> = [];
           for (const id of ids) {
@@ -35,34 +54,19 @@ export class TelemetryService {
           Promise.all(promises).then(function (docs) {
             return docs.map(doc => new TelemetryObject(doc.data) );
           })
-          .then(tmtries => subscriber.next(tmtries) )
+          .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
           .catch((error) => { console.log(error); });
         });
-      });
+      }).shareReplay() as Observable<Array<TelemetryObject>>;
 
       this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-          console.log('ONCHANGE ' + JSON.stringify(change));
-          this.loadData();
+          this.reloadSubject.next(void 0);
       });
-      this.loadData();
   }
 
   // Kann von aussen aufgerufen werden
   public getTelemetryObservable(): Observable<Array<TelemetryObject>> {
-    return this.telemetriesObservable;
-  }
-
-  private loadData() {
-    this.dataService.localDb.query('telemetry/allDocuments/')
-    .then((data) => {
-      const dataset = data.rows.map(row => {
-        return row.id;
-      });
-      this.telemetryIDsSubject.next(dataset);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    return this.telemetriesObservable.do(_ => console.log('Observer to tel obs'));
   }
 
   getTelemetryById(id: string): Promise<TelemetryObject> {
