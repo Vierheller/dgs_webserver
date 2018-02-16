@@ -29,8 +29,11 @@ export class TelemetryService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
   private telemetryIDsObservable: Observable<Array<String>>;
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
+<<<<<<< Updated upstream
   public telemetryList: Array<TelemetryObject>;
   timelineEvent: EventEmitter<number> = new EventEmitter();
+=======
+>>>>>>> Stashed changes
 
   constructor(public dataService: DatabaseConnectorService) {
       this.telemetryIDsObservable = this.reloadSubject.flatMap(_ => {
