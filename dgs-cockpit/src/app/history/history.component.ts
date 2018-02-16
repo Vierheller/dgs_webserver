@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import {telemetryDictonary} from "../models/config/telemetryDic";
+import {telemetryDictonary} from '../models/config/telemetryDic';
 
 @Component({
   selector: 'app-history',

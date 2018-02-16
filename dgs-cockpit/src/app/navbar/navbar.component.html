@@ -5,30 +5,17 @@
   <links>
     <ul class="navbar-nav mr-auto">
       <li [ngClass]="{'active': this.selectedItem === 'dashboard'}" class="nav-item waves-light" mdbRippleRadius>
-        <a (click)="this.selectedItem = 'dashboard'" name="dashboard" class="nav-link"><i class="fa fa-tachometer navbar-icon" aria-hidden="true"></i>Dashboard</a>
+        <a (click)="this.selectItem('dashboard')" name="dashboard" class="nav-link"><i class="fa fa-tachometer navbar-icon" aria-hidden="true"></i>Dashboard</a>
       </li>
       <li [ngClass]="{'active': this.selectedItem === 'map'}" class="nav-item waves-light" mdbRippleRadius>
-        <a (click)="this.selectedItem = 'map'" class="nav-link"><i class="fa fa-map navbar-icon" aria-hidden="true"></i>Karte</a>
+        <a (click)="this.selectItem('map')" class="nav-link"><i class="fa fa-map navbar-icon" aria-hidden="true"></i>Karte</a>
       </li>
       <li [ngClass]="{'active': this.selectedItem === 'history'}" class="nav-item waves-light" mdbRippleRadius>
-        <a (click)="this.selectedItem = 'history'" class="nav-link"><i class="fa fa-history navbar-icon" aria-hidden="true"></i>Verlauf</a>
+        <a (click)="this.selectItem('history')" class="nav-link"><i class="fa fa-history navbar-icon" aria-hidden="true"></i>Verlauf</a>
       </li>
       <li [ngClass]="{'active': this.selectedItem === 'log'}" class="nav-item waves-light" mdbRippleRadius>
-        <a (click)="this.selectedItem = 'log'" class="nav-link"><i class="fa fa-list navbar-icon" aria-hidden="true"></i>Log</a>
+        <a (click)="this.selectItem('log')" class="nav-link"><i class="fa fa-list navbar-icon" aria-hidden="true"></i>Log</a>
       </li>
     </ul>
   </links>
 </mdb-navbar>
-
-<main>
-  <div class="container" style="height:1300px;">
-    <div class="row mt-5 pt-5">
-      <div class="col">
-        <app-dashboard *ngIf="this.selectedItem == 'dashboard'"></app-dashboard>
-        <app-map *ngIf="this.selectedItem == 'map'"></app-map>
-        <app-history *ngIf="this.selectedItem == 'history'"></app-history>
-        <app-log *ngIf="this.selectedItem == 'log'"></app-log>
-      </div>
-    </div>
-  </div>
-</main>
