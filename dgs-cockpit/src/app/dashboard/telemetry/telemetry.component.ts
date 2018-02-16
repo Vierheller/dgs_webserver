@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {Promise} from 'q';
+import {TimelineComponent} from "../timeline/timeline.component";
 
 @Component({
   selector: 'app-telemetry',
@@ -13,7 +14,7 @@ export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
   currentTelemetry: TelemetryObject;
-  telemetryList: Promise<TelemetryObject>;
+  telemetryList: Array<TelemetryObject>;
   lastTelemetryOutput = new Array<TelemetryElement>();
 
   constructor(private telemetryService: TelemetryService) { }
@@ -23,24 +24,26 @@ export class TelemetryComponent implements OnInit {
     this.collapseText = 'Parameter einblenden';
 
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
-      this.currentTelemetry = teleObjects[teleObjects.length - 1];
-      this.generateTelemetryToOutput();
-    });
-    // when custom time has been selected
-    // ToDo für Gabriel: telemetryList ist kein Array, schau mal wie du das lösen willst
-    /*this.telemetryService.timelineEvent.subscribe((index) => {
-      if (this.telemetryList) {
-        this.telemetryService.getTelemetryById(this.telemetryList[index - 1]).then((tele) => {
-          this.currentTelemetry = tele;
-          this.generateTelemetryToOutput();
-        });
+      this.telemetryList = teleObjects;
+
+      if(!this.currentTelemetry) {
+        this.currentTelemetry = teleObjects[teleObjects.length - 1];
+        this.generateTelemetryToOutput();
       }
-    });*/
+    });
+
+    // when custom time has been selected by user
+    this.telemetryService.timelineEvent.subscribe((index) => {
+      if (this.telemetryList) {
+        this.currentTelemetry = this.telemetryList[index - 1];
+        this.generateTelemetryToOutput();
+      }
+    });
   }
 
   // build list for UI
   generateTelemetryToOutput() {
-    if (this.lastTelemetryOutput && this.currentTelemetry) {
+    if (this.currentTelemetry) {
       this.lastTelemetryOutput = [
         this.currentTelemetry.getClass(),
         this.currentTelemetry.getIndex(),
