@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
 import { Subject } from 'rxjs/Subject';
 import { TelemetryInternal } from '../models/Telemetry';
@@ -26,6 +26,7 @@ export class TelemetryService {
   telemetryIDsSubject: Subject<Array<String>> = new Subject();
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
   public telemetryList: Array<TelemetryObject>;
+  timelineEvent: EventEmitter<number> = new EventEmitter();
 
   constructor(public dataService: DatabaseConnectorService) {
       this.telemetryList = [];

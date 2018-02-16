@@ -4,10 +4,10 @@
 
 <main>
   <div class="container">
-    <app-dashboard *ngIf="this.selectedItem == 'dashboard'"></app-dashboard>
-    <app-map *ngIf="this.selectedItem == 'map'"></app-map>
-    <app-history *ngIf="this.selectedItem == 'history'"></app-history>
-    <app-log *ngIf="this.selectedItem == 'log'"></app-log>
+    <app-dashboard [hidden]="this.selectedItem !== 'dashboard'"></app-dashboard>
+    <app-map [hidden]="this.selectedItem !== 'map'"></app-map>
+    <app-history [hidden]="this.selectedItem !== 'history'"></app-history>
+    <app-log [hidden]="this.selectedItem !== 'log'"></app-log>
   </div>
 </main>
 

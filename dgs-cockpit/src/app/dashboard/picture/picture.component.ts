@@ -19,7 +19,7 @@ export class PictureComponent implements OnInit {
   selIndex: number;
 
   constructor(private telemetryService: TelemetryService, private imageService: ImageService) {
-    this.lastTelemetry = new TelemetryObject();
+
   }
 
   ngOnInit() {
@@ -28,29 +28,6 @@ export class PictureComponent implements OnInit {
       this.lastTelemetry = teleObjects[teleObjects.length - 1];
       this.generateOutputRows();
     });
-    // get last telemetry data
-    /*this.telemetryService.getData().subscribe((data) => {
-      this.telemetryCounter = data.length;
-      if (data && data.length > 0) {
-      this.telemetryService.getTelemetryById(data[data.length - 1])
-        .then((tele) => {
-          this.lastTelemetry = tele;
-          this.generateOutputRows();
-        });
-      }
-    });
-
-    // get last picture
-    this.imageService.getData().subscribe((data) => {
-
-      this.pictureList = this.imageService.imageList;   // get picture list
-      if (data && data.length > 0) {
-      this.imageService.getImageById(data[data.length - 1])
-        .then((img) => {
-          this.lastPicture = img;
-        });
-      }
-    });*/
   }
 
   onDialogOpen() {

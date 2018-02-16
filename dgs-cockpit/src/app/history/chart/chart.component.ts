@@ -5,7 +5,7 @@ import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import {TimerObservable} from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
-import {telemetryDictonary} from "../../models/config/telemetryDic";
+import {telemetryDictonary} from '../../models/config/telemetryDic';
 
 @Component({
   selector: 'app-chart',
@@ -31,7 +31,7 @@ export class ChartComponent {
   schemeType = 'ordinal';
   selectedColorScheme: string;
 
-  constructor(private telSvc: TelemetryService) {
+  constructor(private telemetryService: TelemetryService) {
     this.setColorScheme('cool');
     this.currentChartData = new Array<Series>();
     this.newChartData     = new Array<Series>();
@@ -50,29 +50,12 @@ export class ChartComponent {
   // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
     this.show = true;
-    const timer = TimerObservable.create(500, 5000);
-    this.subscription = timer.subscribe(t => {
-      // if (this.telemetryList !== this.telSvc.telemetryList) {
-        /*this.telemetryList = this.telemetryList.concat(this.telSvc.telemetryList);
-        console.log('LISTLENGTH ' + this.telemetryList.length);
-        this.telemetryList.reduce((x, y) => x.findIndex(e => e.timestamp === y.timestamp) < 0 ? [...x, y] : x, []);
-        console.log('LISTLENGTH ' + this.telemetryList.length);*/
-        this.setInterpolationType('Basic');
-        this.telSvc.telemetryList.forEach((teleObject) => {
-          this.createSeriesFromTelemetry(teleObject);
-        });
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      teleObjects.forEach((teleObject) => {
+        this.createSeriesFromTelemetry(teleObject);
         this.updateChartSelection();
-      // }
+      });
     });
-
-    /*this.telSvc.getData().subscribe((data) => {
-      for (let index = 0; index < data.length; index++) {
-        this.telSvc.getTelemetryById(data[index])
-          .then((tele: TelemetryInternal) => {
-            this.createSeriesFromTelemetry(new TelemetryObject(tele));
-          });
-      }
-    });*/
   }
   onClickMe() {
    // this.currentChartData = this.newChartData;
@@ -164,7 +147,7 @@ export class ChartComponent {
 
   ngOnDestroy() {
     console.log('Destroy component');
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 }
 
