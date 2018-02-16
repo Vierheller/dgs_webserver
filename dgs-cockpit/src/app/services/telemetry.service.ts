@@ -1,12 +1,8 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import { DatabaseConnectorService } from './database-connector/database-connector.service';
 import { Subject } from 'rxjs/Subject';
-import { TelemetryInternal } from '../models/Telemetry';
-// import { Promise } from 'q';
 import {TelemetryObject} from '../models/objects/TelemetryObject';
-import { TelemetryComponent } from '../dashboard/telemetry/telemetry.component';
 import { Observable } from 'rxjs/Observable';
-import { Observer } from 'rxjs/Observer';
 import 'rxjs/add/operator/mergeMap';
 import { Promise } from 'bluebird';
 /*
