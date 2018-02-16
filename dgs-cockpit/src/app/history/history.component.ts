@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {telemetryDictonary} from "../models/config/telemetryDic";
 
 @Component({
   selector: 'app-history',
@@ -36,7 +37,12 @@ export class HistoryComponent implements OnInit {
       newChart.push(this.multiChart);
     } else {
       selection.parameters.forEach((param) => {
-        const chart = new Chart('Single Chart ' + param, [param]);
+        let title = param;
+
+        if(telemetryDictonary[param].name)
+          title = telemetryDictonary[param].name;
+
+        const chart = new Chart(title, [param]);
         newChart.push(chart);
       });
     }

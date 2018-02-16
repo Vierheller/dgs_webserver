@@ -1,13 +1,11 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {Http} from '@angular/http';
+import {Component, Input} from '@angular/core';
 import * as d3 from 'd3';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
-import { TelemetryInternal } from '../../models/Telemetry';
 import {TimerObservable} from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
-import { entries } from 'd3';
+import {telemetryDictonary} from "../../models/config/telemetryDic";
 
 @Component({
   selector: 'app-chart',
@@ -37,6 +35,7 @@ export class ChartComponent {
     this.setColorScheme('cool');
     this.currentChartData = new Array<Series>();
     this.newChartData     = new Array<Series>();
+
     // this.telemetryList = new Array<TelemetryObject>();
   }
 
@@ -93,7 +92,11 @@ export class ChartComponent {
     if (this.parameter) {
       for (const str of this.parameter) {
         const result = this.newChartData.find(series => series.name === str);
-        if (result) {
+
+        if(result) {
+          if(telemetryDictonary[result.name])
+            result.name = telemetryDictonary[result.name].name;   // set parameter text
+
           for (const p in tele) {
             if (p === str) {
 
