@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-// tslint:disable-next-line:max-line-length
-import { Observable } from 'rxjs/Observable';
+import { icon, latLng, Layer, marker, tileLayer } from 'leaflet';
+import { TelemetryService } from '../services/telemetry.service';
 
 @Component({
   selector: 'app-map',
@@ -8,44 +8,39 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
-  public zoom = 15;
-  public opacity = 1.0;
-  public width = 5;
+  options = {
+      layers: [
+          tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
+      ],
+      zoom: 5,
+      center: latLng(46.879966, -121.726909)
+  };
 
-  increaseZoom() {
-      this.zoom  = Math.min(this.zoom + 1, 18);
-      console.log('zoom: ', this.zoom);
-  }
-
-  decreaseZoom() {
-      this.zoom  = Math.max(this.zoom - 1, 1);
-      console.log('zoom: ', this.zoom);
-  }
-
-  increaseOpacity() {
-      this.opacity  = Math.min(this.opacity + 0.1, 1);
-      console.log('opacity: ', this.opacity);
-  }
-
-  decreaseOpacity() {
-      this.opacity  = Math.max(this.opacity - 0.1, 0);
-      console.log('opacity: ', this.opacity);
-  }
+  markers: Layer[] = [];
   // tslint:disable-next-line:max-line-length
-  constructor() {
-
+  constructor(private telSvc: TelemetryService) {
   }
 
   ngOnInit() {
 
   }
 
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngAfterViewInit() {
-
+  addMarker(lat: number, lng: number) {
+    const newMarker = marker(
+        [ lat, lng ],
+        {
+            icon: icon({
+                iconSize: [ 25, 41 ],
+                iconAnchor: [ 13, 41 ],
+                iconUrl: 'assets/marker-icon.png',
+                shadowUrl: 'assets/marker-shadow.png'
+            })
+        }
+    );
+    this.markers.push(newMarker);
   }
 
-  onClickMe() {
-  }
-
+    removeMarker() {
+      this.markers.pop();
+    }
 }

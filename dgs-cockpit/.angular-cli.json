@@ -10,7 +10,11 @@
       "assets": [
         "assets",
         "favicon.ico",
-        { "glob": "**/*", "input": "../node_modules/cesium/Build/Cesium", "output": "./assets/cesium" }
+        {
+          "glob": "**/*",
+          "input": "../node_modules/leaflet/dist/images",
+          "output": "./assets/"
+        }
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -25,11 +29,10 @@
         "../node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
         "../node_modules/angular-bootstrap-md/scss/mdb-free.scss",
         "../node_modules/material-design-icons/iconfont/material-icons.css",
-        "../node_modules/cesium/Build/Cesium/Widgets/widgets.css",
+        "../node_modules/leaflet/dist/leaflet.css",
         "../node_modules/@swimlane/ngx-charts/release/index.css"
       ],
       "scripts": [
-        "../node_modules/cesium/Build/Cesium/Cesium.js",
         "../node_modules/chart.js/dist/Chart.js",
         "../node_modules/hammerjs/hammer.min.js"
       ],

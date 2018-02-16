@@ -24,9 +24,12 @@ export class PictureComponent implements OnInit {
 
   ngOnInit() {
     this.selIndex = 0;
-
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      this.lastTelemetry = teleObjects[teleObjects.length - 1];
+      this.generateOutputRows();
+    });
     // get last telemetry data
-    this.telemetryService.getData().subscribe((data) => {
+    /*this.telemetryService.getData().subscribe((data) => {
       this.telemetryCounter = data.length;
       if (data && data.length > 0) {
       this.telemetryService.getTelemetryById(data[data.length - 1])
@@ -47,7 +50,7 @@ export class PictureComponent implements OnInit {
           this.lastPicture = img;
         });
       }
-    });
+    });*/
   }
 
   onDialogOpen() {

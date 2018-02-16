@@ -23,6 +23,7 @@ import { LogService } from './services/log.service';
 import { MapComponent } from './map/map.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {AngularOpenlayersModule} from 'ngx-openlayers';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {AngularOpenlayersModule} from 'ngx-openlayers';
     BrowserAnimationsModule,
     ChartsModule,
     NgxChartsModule,
-    AngularOpenlayersModule
+    AngularOpenlayersModule,
+    LeafletModule.forRoot()
   ],
   providers: [
     DatabaseConnectorService,

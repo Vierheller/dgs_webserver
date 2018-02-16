@@ -22,17 +22,10 @@ export class TelemetryComponent implements OnInit {
     this.currentTelemetry = new TelemetryObject();
     this.collapseText = 'Parameter einblenden';
 
-    this.telemetryService.getData().subscribe((data) => {
-      this.telemetryList = data;
-      if (data && data.length > 0) {
-        this.telemetryService.getTelemetryById(data[data.length - 1])
-            .then((tele) => {
-              this.currentTelemetry = tele;
-              this.generateTelemetryToOutput();
-            });
-      }
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      this.currentTelemetry = teleObjects[teleObjects.length - 1];
+      this.generateTelemetryToOutput();
     });
-
     // when custom time has been selected
     // ToDo für Gabriel: telemetryList ist kein Array, schau mal wie du das lösen willst
     /*this.telemetryService.timelineEvent.subscribe((index) => {

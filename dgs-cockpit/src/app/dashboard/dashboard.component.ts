@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../services/telemetry.service';
 import { TelemetryInternal } from '../models/Telemetry';
+import { TelemetryObject } from '../models/objects/TelemetryObject';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,21 +9,14 @@ import { TelemetryInternal } from '../models/Telemetry';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  telemetryList: TelemetryInternal[];
-  constructor(public telSvc: TelemetryService) {
-    this.telemetryList = new Array();
+  currentTelemetry: TelemetryObject;
+  constructor(public telemetryService: TelemetryService) {
+    this.currentTelemetry = new TelemetryObject();
   }
 
   ngOnInit() {
-    this.telSvc.getData().subscribe((data) => {
-      console.log('COMPONENT DATA: ' + data[0]);
-      for (let index = 0; index < data.length; index++) {
-
-        this.telSvc.getTelemetryById(data[index])
-          .then((tele) => {
-            this.telemetryList.push(tele);
-          });
-      }
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      this.currentTelemetry = teleObjects[teleObjects.length - 1];
     });
   }
 }
