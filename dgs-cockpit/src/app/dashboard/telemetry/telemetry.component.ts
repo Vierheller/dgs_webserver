@@ -13,20 +13,23 @@ import {TimelineComponent} from "../timeline/timeline.component";
 export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
+  historyMode: boolean;
   currentTelemetry: TelemetryObject;
   telemetryList: Array<TelemetryObject>;
   lastTelemetryOutput = new Array<TelemetryElement>();
 
-  constructor(private telemetryService: TelemetryService) { }
+  constructor(private telemetryService: TelemetryService) {
+    this.collapseText = 'Parameter einblenden';
+    this.historyMode = false;
+    this.currentTelemetry = new TelemetryObject();
+    this.generateTelemetryToOutput();   // set the init values to UI
+  }
 
   ngOnInit() {
-    this.currentTelemetry = new TelemetryObject();
-    this.collapseText = 'Parameter einblenden';
-
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       this.telemetryList = teleObjects;
 
-      if(!this.currentTelemetry) {
+      if(!this.historyMode) {
         this.currentTelemetry = teleObjects[teleObjects.length - 1];
         this.generateTelemetryToOutput();
       }
@@ -37,6 +40,8 @@ export class TelemetryComponent implements OnInit {
       if (this.telemetryList) {
         this.currentTelemetry = this.telemetryList[index - 1];
         this.generateTelemetryToOutput();
+
+        this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
       }
     });
   }

@@ -24,7 +24,6 @@ export class TelemetryService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
   private telemetryIDsObservable: Observable<Array<String>>;
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
-  public telemetryList: Array<TelemetryObject>;
   timelineEvent: EventEmitter<number> = new EventEmitter();
 
 

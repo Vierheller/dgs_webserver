@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {ImageService} from '../../services/image.service';
-import {Image} from '../../models/Image';
+import {ImageObject} from "../../models/objects/ImageObject";
 
 @Component({
   selector: 'app-picture',
@@ -12,21 +12,30 @@ import {Image} from '../../models/Image';
 export class PictureComponent implements OnInit {
 
   lastTelemetry: TelemetryObject;
-  lastPicture: Image;
+  lastPicture: ImageObject;
   telemetryCounter: number;
-  pictureList = new Array<Image>();
-  smallTelemetryOutput = new Array<TelemetryElement>();
+  pictureList: Array<ImageObject>;
+  smallTelemetryOutput: Array<TelemetryElement>;
   selIndex: number;
 
   constructor(private telemetryService: TelemetryService, private imageService: ImageService) {
-
+    this.pictureList = new Array<ImageObject>();
+    this.smallTelemetryOutput = new Array<TelemetryElement>();
   }
 
   ngOnInit() {
     this.selIndex = 0;
+
+    // get telemetry data
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       this.lastTelemetry = teleObjects[teleObjects.length - 1];
       this.generateOutputRows();
+    });
+
+    // get image data
+    this.imageService.getImageObservable().subscribe((imgObjects) => {
+      this.lastPicture = imgObjects[imgObjects.length - 1];
+      this.pictureList = imgObjects;
     });
   }
 
