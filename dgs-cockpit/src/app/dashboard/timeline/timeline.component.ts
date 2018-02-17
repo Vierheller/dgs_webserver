@@ -9,15 +9,16 @@ import {Promise} from 'q';
   styleUrls: ['./timeline.component.css']
 })
 export class TimelineComponent implements OnInit {
-
   timelineValue: number;
   timelineMax: number;
   playMode: boolean;
+  repeatMode: boolean;
   telemetryList: Array<TelemetryObject>;
   selectedTelemetry: TelemetryObject;
 
   constructor(private telemetryService: TelemetryService) {
     this.playMode = false;
+    this.repeatMode = false;
   }
 
   ngOnInit() {
@@ -47,15 +48,43 @@ export class TimelineComponent implements OnInit {
     }
   }
 
-  playTrackedData() {
-    this.playMode = !this.playMode;   // toggle button
+  startOrStopPlayingTrackedData() {
+    if(!this.playMode) {
+      if(this.timelineValue === this.timelineMax) {
+        this.timelineValue = 1;
+      }
+      this.playTrackedData();
+    }
+    this.togglePlayButton();
+  }
 
-    /*for(let i=0; i<this.telemetryList.length; i++) {
-      setTimeout(function () {
-        this.timelineValue = i;
-        this.telemetryService.timelineEvent.emit(i);
-        this.selectedTelemetry = this.telemetryList[i];
-      },2000)
-    }*/
+  // recursive
+  playTrackedData() {
+    if(this.timelineValue === this.timelineMax) {
+      if(this.repeatMode) {
+        this.timelineValue = 1;
+      } else {
+        this.togglePlayButton();
+        return;
+      }
+    }
+
+    this.telemetryService.timelineEvent.emit(this.timelineValue - 1);
+    this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
+
+    setTimeout(() => {
+      if(this.playMode) {
+        this.timelineValue++;
+        this.playTrackedData();   // next step recursive
+      }
+    }, 2000);
+  }
+
+  togglePlayButton() {
+    this.playMode = !this.playMode;
+  }
+
+  toggleRepeatMode() {
+    this.repeatMode = !this.repeatMode;
   }
 }

@@ -4,9 +4,14 @@
   </div>
   <div class="card-body">
     <p class="card-text" style="float:left;">
-      <a (click)="playTrackedData()">
+      <a (click)="startOrStopPlayingTrackedData()">
         <i *ngIf="!this.playMode" class="fa fa-play" aria-hidden="true"></i>
-        <i *ngIf="this.playMode" class="fa fa-stop" aria-hidden="true"></i>
+        <i *ngIf="this.playMode" class="fa fa-stop blue-text" aria-hidden="true"></i>
+      </a>
+      &nbsp;
+      <a (click)="toggleRepeatMode()">
+        <i *ngIf="!this.repeatMode" class="fa fa-repeat" aria-hidden="true"></i>
+        <i *ngIf="this.repeatMode" class="fa fa-repeat blue-text" aria-hidden="true"></i>
       </a>
     </p>
 
