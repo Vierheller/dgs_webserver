@@ -86,7 +86,7 @@ export class PictureComponent implements OnInit {
       this.smallTelemetryOutput = [
         this.lastTelemetry.getSpeed(),
         this.lastTelemetry.getDirection(),
-        this.lastTelemetry.getPressure(),
+        this.lastTelemetry.getBearing(),
       ];
     }
   }
