@@ -38,7 +38,7 @@ export class TelemetryComponent implements OnInit {
     // when custom time has been selected by user
     this.telemetryService.timelineEvent.subscribe((index) => {
       if (this.telemetryList) {
-        this.currentTelemetry = this.telemetryList[index - 1];
+        this.currentTelemetry = this.telemetryList[index];
         this.generateTelemetryToOutput();
 
         this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max

@@ -39,7 +39,7 @@ export class TimelineComponent implements OnInit {
   changeTimeSelection(value: number) {
     if (value) {
       this.timelineValue = value;
-      this.telemetryService.timelineEvent.emit(this.timelineValue);    // trigger timeline event
+      this.telemetryService.timelineEvent.emit(this.timelineValue - 1);    // trigger timeline event
 
       if (this.telemetryList) {
         this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
