@@ -1,4 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+// tslint:disable-next-line:max-line-length
 import { icon, latLng, Layer, marker, tileLayer, Popup, LatLng, Marker, Polyline, PolylineOptions, LayerGroup, Map, point, FitBoundsOptions } from 'leaflet';
 import { TelemetryService } from '../services/telemetry.service';
 import { TelemetryObject } from '../models/objects/TelemetryObject';
@@ -50,7 +51,7 @@ export class MapComponent implements OnInit {
           this.addMarkerFromTelemetryObject(teleObject);
         });
         this.addLinesBetweenMarkers();
-        
+
         if (this.activeMap) {
           console.log('Called fit to bounds');
           this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
