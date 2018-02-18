@@ -1,5 +1,6 @@
 <!-- Map -->
-<div leaflet style="height: 300px;"
-		[leafletOptions]="options"
-		[leafletLayers]="markers">
+<div leaflet style="height: 600px;"
+	[leafletOptions]="options"
+	(leafletMapReady)="onMapReady($event)"
+	[leafletLayersControl]="layersControl">
 </div>

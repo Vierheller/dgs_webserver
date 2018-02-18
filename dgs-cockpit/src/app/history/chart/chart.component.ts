@@ -39,7 +39,7 @@ export class ChartComponent {
   public visible = false;
   // line interpolation
   curveType = 'Natural';
-  curve = d3.curveLinear;
+  curve = d3.curveBasis;
   schemeType = 'ordinal';
 
   constructor(private telemetryService: TelemetryService) {
@@ -63,7 +63,7 @@ export class ChartComponent {
     this.subscription = timer.subscribe((observer) => {
       this.updateChartSelection();
     });
-    console.log(this.telemetryService);
+    
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
@@ -156,6 +156,7 @@ export class ChartComponent {
     console.log('Legend clicked', entry);
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy() {
     console.log('Destroy component');
     this.subscription.unsubscribe();
