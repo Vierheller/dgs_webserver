@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {Promise} from 'q';
-import {TimelineComponent} from "../timeline/timeline.component";
+import {TimelineComponent} from '../timeline/timeline.component';
 
 @Component({
   selector: 'app-telemetry',
@@ -29,7 +29,7 @@ export class TelemetryComponent implements OnInit {
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       this.telemetryList = teleObjects;
 
-      if(!this.historyMode) {
+      if (!this.historyMode) {
         this.currentTelemetry = teleObjects[teleObjects.length - 1];
         this.generateTelemetryToOutput();
       }

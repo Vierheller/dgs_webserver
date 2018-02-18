@@ -21,9 +21,9 @@ export class SelectionComponent implements OnInit {
   }
 
   updateChartSelection(event) {
-    if (event.target.name === 'multiChart')
+    if (event.target.name === 'multiChart') {
       this.multiChart = event.target.checked;
-
+    }
     if (event.target.checked && event.target.name !== 'multiChart') {
       this.selection.push(event.target.name);     // add selection
     } else {

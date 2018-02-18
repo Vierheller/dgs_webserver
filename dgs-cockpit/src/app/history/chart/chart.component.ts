@@ -26,9 +26,9 @@ export class ChartComponent {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Country';
+  xAxisLabel = 'Zeit';
   showYAxisLabel = true;
-  yAxisLabel = 'Population';
+  yAxisLabel = 'Wert';
   colorScheme: any;
 
   // telemetryList: TelemetryObject[];
@@ -39,7 +39,7 @@ export class ChartComponent {
   public visible = false;
   // line interpolation
   curveType = 'Natural';
-  curve = d3.curveBasis;
+  curve = d3.curveNatural;
   schemeType = 'ordinal';
 
   constructor(private telemetryService: TelemetryService) {
@@ -59,15 +59,12 @@ export class ChartComponent {
   ngOnInit(): void {
     this.setColorScheme('natural');
     this.show = true;
-    const timer = new TimerObservable(500, 5000);
-    this.subscription = timer.subscribe((observer) => {
-      this.updateChartSelection();
-    });
-    
+
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });
+      this.updateChartSelection();
     });
   }
 
@@ -94,7 +91,7 @@ export class ChartComponent {
           for (const p in tele) {
             if (p === str) {
 
-              const entry = new SeriesEntry(telDate, tele[p]);
+              const entry = new SeriesEntry(tele.index.toString(), tele[p]);
 
               result.series.push(entry);
             }
@@ -159,7 +156,6 @@ export class ChartComponent {
   // tslint:disable-next-line:use-life-cycle-interface
   ngOnDestroy() {
     console.log('Destroy component');
-    this.subscription.unsubscribe();
   }
 }
 

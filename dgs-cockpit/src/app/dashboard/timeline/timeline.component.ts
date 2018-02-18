@@ -27,7 +27,7 @@ export class TimelineComponent implements OnInit {
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       this.telemetryList = teleObjects;
 
-      if(!this.timelineValue || this.timelineValue == this.timelineMax) { // auto update list
+      if (!this.timelineValue || this.timelineValue === this.timelineMax) { // auto update list
         this.timelineValue = teleObjects.length;
         this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
       }
@@ -49,8 +49,8 @@ export class TimelineComponent implements OnInit {
   }
 
   startOrStopPlayingTrackedData() {
-    if(!this.playMode) {
-      if(this.timelineValue === this.timelineMax) {
+    if (!this.playMode) {
+      if (this.timelineValue === this.timelineMax) {
         this.timelineValue = 1;
       }
       this.playTrackedData();
@@ -60,8 +60,8 @@ export class TimelineComponent implements OnInit {
 
   // recursive
   playTrackedData() {
-    if(this.timelineValue === this.timelineMax) {
-      if(this.repeatMode) {
+    if (this.timelineValue === this.timelineMax) {
+      if (this.repeatMode) {
         this.timelineValue = 1;
       } else {
         this.togglePlayButton();
@@ -73,7 +73,7 @@ export class TimelineComponent implements OnInit {
     this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
 
     setTimeout(() => {
-      if(this.playMode) {
+      if (this.playMode) {
         this.timelineValue++;
         this.playTrackedData();   // next step recursive
       }

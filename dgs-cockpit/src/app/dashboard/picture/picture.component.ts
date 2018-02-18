@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {ImageService} from '../../services/image.service';
-import {ImageObject} from "../../models/objects/ImageObject";
+import {ImageObject} from '../../models/objects/ImageObject';
 
 @Component({
   selector: 'app-picture',
@@ -40,7 +40,7 @@ export class PictureComponent implements OnInit {
       this.lastPicture = imgObjects[imgObjects.length - 1];
       this.pictureList = imgObjects;
 
-      if(!this.historyMode) {
+      if (!this.historyMode) {
         this.lastPicture = imgObjects[imgObjects.length - 1];
       }
     });
@@ -56,8 +56,8 @@ export class PictureComponent implements OnInit {
 
   // return the picture which fits to the given timestamp most
   calcNearestPicture(timestamp: number): ImageObject {
-    for(let i=0; i<this.pictureList.length; i++) {
-      if(this.pictureList[i].timestamp >=  timestamp) {  // select first pic which is higher than timestamp
+    for (let i = 0; i < this.pictureList.length; i++) {
+      if (this.pictureList[i].timestamp >=  timestamp) {  // select first pic which is higher than timestamp
         return this.pictureList[i];
       }
     }

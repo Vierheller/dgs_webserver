@@ -21,14 +21,16 @@ export class HistoryComponent implements OnInit {
   }
 
   selectionChanged(selection: any) {
-    if (!selection)
+    if (!selection) {
       return;
+    }
 
     console.log('selection');
     console.log(selection);
 
-    if (!selection.parameters)
+    if (!selection.parameters) {
       return;
+    }
 
     const newChart = new Array<Chart>();
 
@@ -39,16 +41,16 @@ export class HistoryComponent implements OnInit {
       selection.parameters.forEach((param) => {
         let title = param;
 
-        if(telemetryDictonary[param].name)
+        if (telemetryDictonary[param].name) {
           title = telemetryDictonary[param].name;
-
+        }
         const chart = new Chart(title, [param]);
         newChart.push(chart);
       });
     }
 
     this.activeCharts = newChart;
-    //this.ref.detectChanges();
+    // this.ref.detectChanges();
   }
 }
 
