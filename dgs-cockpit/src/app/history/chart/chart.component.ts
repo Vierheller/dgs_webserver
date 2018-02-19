@@ -91,7 +91,7 @@ export class ChartComponent {
           for (const p in tele) {
             if (p === str) {
 
-              const entry = new SeriesEntry(tele.index.toString(), tele[p]);
+              const entry = new SeriesEntry(tele.getTimestampConverted().value, tele[p]);
 
               result.series.push(entry);
             }
