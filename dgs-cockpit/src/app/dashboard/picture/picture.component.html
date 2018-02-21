@@ -24,7 +24,10 @@
       </thead>
       <tbody>
       <tr *ngFor="let item of this.smallTelemetryOutput">
-        <td>{{item.parameter}}</td>
+        <td>
+          <i *ngIf="item.icon" class="{{item.icon}} icon-width" aria-hidden="true"></i>
+          {{item.parameter}}
+        </td>
         <td>{{item.value + ' ' + item.unit}}</td>
       </tr>
       </tbody>
