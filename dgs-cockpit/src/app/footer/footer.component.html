@@ -1,9 +1,18 @@
 <footer class="page-footer stylish-color-dark center-on-small-only fixed-bottom">
-  <!--Copyright-->
   <div class="footer-copyright">
     <div class="container-fluid">
-      Mit der Sonde verbunden.
+      <div *ngIf="lastTel">
+        Aktuell:
+        <i title="{{lastTel?.getSatellites().parameter}}" class="{{lastTel?.getSatellites().icon}} footer-icon" aria-hidden="true"></i>
+        {{lastTel?.getSatellites().value}}
+        <i title="{{lastTel?.getTimestampConverted().parameter}}" class="{{lastTel?.getTimestampConverted().icon}} footer-icon" aria-hidden="true"></i>
+        {{lastTel?.getTimestampConverted().value}}
+        <i title="{{lastTel?.getPackageCounter().parameter}}" class="{{lastTel?.getPackageCounter().icon}} footer-icon" aria-hidden="true"></i>
+        {{lastTel?.getPackageCounter().value}}
+      </div>
+      <div>
+        <p>Eine Studienarbeit von Sören Falter, Gabriel Kolar und Jan-Niklas Vierheller.</p>
+      </div>
     </div>
   </div>
-  <!--/.Copyright-->
 </footer>

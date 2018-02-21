@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {TelemetryService} from "../services/telemetry.service";
+import {TelemetryObject} from "../models/objects/TelemetryObject";
 
 @Component({
   selector: 'app-footer',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
+  lastTel: TelemetryObject;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private telemetryService: TelemetryService) {
+    this.lastTel = new TelemetryObject();
   }
 
+  ngOnInit() {
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      this.lastTel = teleObjects[teleObjects.length - 1];
+    });
+  }
 }
