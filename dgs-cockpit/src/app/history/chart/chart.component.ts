@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import { colorSets as ngxChartsColorsets } from '@swimlane/ngx-charts/release/utils/color-sets';
 import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
-import {TimerObservable} from 'rxjs/observable/TimerObservable';
 import { Subscription } from 'rxjs/Subscription';
 import {telemetryDictonary} from '../../models/config/telemetryDic';
 import 'rxjs/add/operator/do';
@@ -30,6 +29,7 @@ export class ChartComponent {
   showYAxisLabel = true;
   yAxisLabel = 'Wert';
   colorScheme: any;
+  autoScale: true;
 
   // telemetryList: TelemetryObject[];
   currentChartData: Series[];
@@ -101,7 +101,7 @@ export class ChartComponent {
     }
   }
 
-  select(data): void {
+  onSelect(data): void {
     console.log('Item clicked', data);
   }
 
