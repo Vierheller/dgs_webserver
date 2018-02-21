@@ -1,7 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryObject} from '../../models/objects/TelemetryObject';
-import {Promise} from 'q';
 
 @Component({
   selector: 'app-timeline',

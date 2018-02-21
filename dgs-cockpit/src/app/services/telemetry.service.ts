@@ -24,43 +24,44 @@ export class TelemetryService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
   private telemetryIDsObservable: Observable<Array<String>>;
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
-  timelineEvent: EventEmitter<number> = new EventEmitter();
-
+  public timelineEvent: EventEmitter<number>;
 
   constructor(public dataService: DatabaseConnectorService) {
-      this.telemetryIDsObservable = this.reloadSubject.flatMap(_ => {
-        return Observable.create(subscriber => {
-          this.dataService.localDb.query('telemetry/allDocuments/')
-          .then((data) => {
-            const dataset = data.rows.map(row => {
-              return row.id;
-            });
-            subscriber.next(dataset);
-            subscriber.complete();
-          })
-          .catch((error) => {
-            console.log(error);
+    this.timelineEvent = new EventEmitter<number>();
+
+    this.telemetryIDsObservable = this.reloadSubject.flatMap(_ => {
+      return Observable.create(subscriber => {
+        this.dataService.localDb.query('telemetry/allDocuments/')
+        .then((data) => {
+          const dataset = data.rows.map(row => {
+            return row.id;
           });
+          subscriber.next(dataset);
+          subscriber.complete();
+        })
+        .catch((error) => {
+          console.log(error);
         });
-      }).shareReplay() as Observable<Array<String>>;
-
-      this.telemetriesObservable = this.telemetryIDsObservable.flatMap((ids) => {
-        return Observable.create(subscriber => {
-          const promises: Array<Promise<any>> = [];
-          for (const id of ids) {
-            promises.push(this.dataService.localDb.get(id));
-          }
-          Promise.all(promises).then(function (docs) {
-            return docs.map(doc => new TelemetryObject(doc.data) );
-          })
-          .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
-          .catch((error) => { console.log(error); });
-        });
-      }).shareReplay() as Observable<Array<TelemetryObject>>;
-
-      this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-          this.reloadSubject.next(void 0);
       });
+    }).shareReplay() as Observable<Array<String>>;
+
+    this.telemetriesObservable = this.telemetryIDsObservable.flatMap((ids) => {
+      return Observable.create(subscriber => {
+        const promises: Array<Promise<any>> = [];
+        for (const id of ids) {
+          promises.push(this.dataService.localDb.get(id));
+        }
+        Promise.all(promises).then(function (docs) {
+          return docs.map(doc => new TelemetryObject(doc.data) );
+        })
+        .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
+        .catch((error) => { console.log(error); });
+      });
+    }).shareReplay() as Observable<Array<TelemetryObject>>;
+
+    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
+        this.reloadSubject.next(void 0);
+    });
   }
 
   // Kann von aussen aufgerufen werden
