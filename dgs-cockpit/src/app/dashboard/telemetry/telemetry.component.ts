@@ -50,6 +50,7 @@ export class TelemetryComponent implements OnInit {
   generateTelemetryToOutput() {
     if (this.currentTelemetry) {
       this.lastTelemetryOutput = [
+        this.currentTelemetry.getDMS(),
         this.currentTelemetry.getClass(),
         this.currentTelemetry.getIndex(),
         this.currentTelemetry.getChannel(),
