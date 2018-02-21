@@ -1,9 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 //
 
+html, body, main {
+  height: 100vh;
+  margin:0;
+  padding:0;
+  overflow: auto;
+}
+
 .container{
   margin-bottom: 70px;
-  margin-top: 56px;
+  margin-top: 64px;
+  position: relative;
+
+  min-height: calc(100% - 64px - 70px);;
 
   padding-top: 15px;
   padding-bottom: 15px;
@@ -19,4 +29,10 @@
 
 .navbar.scrolling-navbar{
   z-index:1100 !important;
+}
+
+
+
+.leaflet-container{
+  height: 100%;
 }
