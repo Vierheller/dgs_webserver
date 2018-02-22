@@ -16,12 +16,17 @@ export class TelemetryComponent implements OnInit {
   historyMode: boolean;
   currentTelemetry: TelemetryObject;
   telemetryList: Array<TelemetryObject>;
-  lastTelemetryOutput = new Array<TelemetryElement>();
+  outputWeather: Array<TelemetryElement>;
+  outputMovement: Array<TelemetryElement>;
+  outputOthers: Array<TelemetryElement>;
 
   constructor(private telemetryService: TelemetryService) {
     this.collapseText = 'Parameter einblenden';
     this.historyMode = false;
     this.currentTelemetry = new TelemetryObject();
+    this.outputWeather = new Array<TelemetryElement>();
+    this.outputMovement = new Array<TelemetryElement>();
+    this.outputOthers = new Array<TelemetryElement>();
     this.generateTelemetryToOutput();   // set the init values to UI
   }
 
@@ -49,29 +54,35 @@ export class TelemetryComponent implements OnInit {
   // build list for UI
   generateTelemetryToOutput() {
     if (this.currentTelemetry) {
-      this.lastTelemetryOutput = [
-        this.currentTelemetry.getDMS(),
-        this.currentTelemetry.getClass(),
-        this.currentTelemetry.getIndex(),
-        this.currentTelemetry.getChannel(),
-        this.currentTelemetry.getPayload(),
-        this.currentTelemetry.getPackageCounter(),
-        this.currentTelemetry.getTime(),
-        this.currentTelemetry.getLat(),
-        this.currentTelemetry.getLon(),
-        this.currentTelemetry.getAlt(),
-        this.currentTelemetry.getSpeed(),
-        this.currentTelemetry.getDirection(),
-        this.currentTelemetry.getSatellites(),
-        this.currentTelemetry.getTempChip(),
-        this.currentTelemetry.getBatteryVoltage(),
-        this.currentTelemetry.getCurrentVoltage(),
-        this.currentTelemetry.getTempCase(),
+      this.outputWeather = [
         this.currentTelemetry.getPressure(),
         this.currentTelemetry.getHumidity(),
         this.currentTelemetry.getTempExtern(),
-        this.currentTelemetry.getTimestamp(),
-        this.currentTelemetry.getType(),
+        this.currentTelemetry.getTempCase(),
+        this.currentTelemetry.getTempChip(),
+      ];
+
+      this.outputMovement = [
+        this.currentTelemetry.getDMS(),
+        this.currentTelemetry.getTime(),
+        //this.currentTelemetry.getLat(),
+        //this.currentTelemetry.getLon(),
+        this.currentTelemetry.getAlt(),
+        this.currentTelemetry.getSpeed(),
+        this.currentTelemetry.getDirection(),
+      ];
+
+      this.outputOthers = [
+        //this.currentTelemetry.getClass(),
+        //this.currentTelemetry.getIndex(),
+        this.currentTelemetry.getSatellites(),
+        this.currentTelemetry.getChannel(),
+        //this.currentTelemetry.getPayload(),
+        this.currentTelemetry.getPackageCounter(),
+        this.currentTelemetry.getTimestampConverted(),
+        //this.currentTelemetry.getType(),
+        //this.currentTelemetry.getBatteryVoltage(),
+        //this.currentTelemetry.getCurrentVoltage(),
       ];
     }
   }

@@ -6,22 +6,66 @@
 
 <div class="collapse {{this.collapseState}}" id="collapseTelemetry">
 
-  <table class="table table-bordered">
-    <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Wert</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let item of this.lastTelemetryOutput">
-      <td>
-        <i *ngIf="item.icon" class="{{item.icon}} icon-width" aria-hidden="true"></i>
-        {{item.parameter}}
-      </td>
-      <td>{{item.value + ' ' + item.unit}}</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="row justify-content-md-center">
+    <div class="col-12 col-md-auto table-container">
+      <table class="table table-bordered">
+        <thead class="blue-grey lighten-4">
+        <tr>
+          <th>Wetterdaten</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of this.outputWeather">
+          <td>
+            <i *ngIf="item.icon" class="{{item.icon}} icon-width" aria-hidden="true"></i>
+            {{item.parameter}}
+          </td>
+          <td>{{item.value + ' ' + item.unit}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-12 col-md-auto table-container">
+      <table class="table table-bordered">
+        <thead class="blue-grey lighten-4">
+        <tr>
+          <th>Bewegungsdaten</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of this.outputMovement">
+          <td>
+            <i *ngIf="item.icon" class="{{item.icon}} icon-width" aria-hidden="true"></i>
+            {{item.parameter}}
+          </td>
+          <td>{{item.value + ' ' + item.unit}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-12 col-md-auto table-container">
+      <table class="table table-bordered">
+        <thead class="blue-grey lighten-4">
+        <tr>
+          <th>Technische Daten</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of this.outputOthers">
+          <td>
+            <i *ngIf="item.icon" class="{{item.icon}} icon-width" aria-hidden="true"></i>
+            {{item.parameter}}
+          </td>
+          <td>{{item.value + ' ' + item.unit}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
