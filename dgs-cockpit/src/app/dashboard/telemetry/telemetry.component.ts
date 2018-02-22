@@ -23,10 +23,12 @@ export class TelemetryComponent implements OnInit {
   constructor(private telemetryService: TelemetryService) {
     this.collapseText = 'Parameter einblenden';
     this.historyMode = false;
+    this.telemetryList = new Array<TelemetryObject>();
     this.currentTelemetry = new TelemetryObject();
     this.outputWeather = new Array<TelemetryElement>();
     this.outputMovement = new Array<TelemetryElement>();
     this.outputOthers = new Array<TelemetryElement>();
+    this.telemetryList.push(this.currentTelemetry);
     this.generateTelemetryToOutput();   // set the init values to UI
   }
 
@@ -70,6 +72,7 @@ export class TelemetryComponent implements OnInit {
         this.currentTelemetry.getAlt(),
         this.currentTelemetry.getSpeed(),
         this.currentTelemetry.getDirection(),
+        this.currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value)
       ];
 
       this.outputOthers = [
