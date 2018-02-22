@@ -17,6 +17,81 @@ export class ChartComponent {
   @Input()  title: string;
   @Input()  parameter: string[];
 
+  public chartType = 'line';
+
+  public chartDatasets: Array<Series> = [];
+  public chartLabels: Array<string> = [];
+  public chartColors: Array<SeriesStyling> = [];
+
+  public chartOptions: any = {
+      responsive: true
+  };
+
+  constructor(private telemetryService: TelemetryService) {
+
+  }
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnInit(): void {
+    this.setupChart();
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      teleObjects.forEach((teleObject) => {
+        this.createSeriesFromTelemetry(teleObject);
+      });
+    });
+  }
+
+  setupChart() {
+    for (let index = 0; index < this.parameter.length; index++) {
+      this.chartDatasets.push(new Series([], this.parameter[index]));
+      this.chartColors.push(new SeriesStyling());
+    }
+  }
+
+  createSeriesFromTelemetry(tele: TelemetryObject) {
+    this.chartLabels.push(tele.getTimestampConverted().value);
+    if (this.parameter) {
+      for (const str of this.parameter) {
+        const result = this.chartDatasets.find(series => series.label === str);
+
+        if (result) {
+          for (const p in tele) {
+            if (p === str) {
+              result.data.push(tele[p]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public chartClicked(e: any): void {
+
+  }
+
+  public chartHovered(e: any): void {
+
+  }
+}
+export class SeriesEntry {
+  constructor(public name: Date | string, public value: number) {}
+}
+
+export class Series {
+  constructor(public data: Array<number>, public label: string) {}
+}
+// ToDO: Generate color pattern for series
+export class SeriesStyling {
+  constructor(
+    public backgroundColor: string = 'rgba(110,220,220,0.2)',
+    public borderColor: string =  'rgba(220,220,220,1)',
+    public borderWidth: number =  2,
+    public pointBackgroundColor: string =  'rgba(20,220,220,1)',
+    public pointBorderColor: string =  '#fff',
+    public pointHoverBackgroundColor: string =  '#fff',
+    public pointHoverBorderColor: string =  'rgba(220,220,220,1)') {}
+}
+  /*
   view: any[] = [700, 400];
 
   // options
@@ -165,4 +240,4 @@ export class SeriesEntry {
 
 export class Series {
   constructor(public name: string, public series: SeriesEntry[]) {}
-}
+}*/
