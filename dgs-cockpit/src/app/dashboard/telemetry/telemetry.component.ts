@@ -59,6 +59,7 @@ export class TelemetryComponent implements OnInit {
       this.outputWeather = [
         this.currentTelemetry.getPressure(),
         this.currentTelemetry.getHumidity(),
+        this.currentTelemetry.getWindDirection(),
         this.currentTelemetry.getTempExtern(),
         this.currentTelemetry.getTempCase(),
         this.currentTelemetry.getTempChip(),
@@ -71,7 +72,7 @@ export class TelemetryComponent implements OnInit {
         //this.currentTelemetry.getLon(),
         this.currentTelemetry.getAlt(),
         this.currentTelemetry.getSpeed(),
-        this.currentTelemetry.getDirection(),
+        this.currentTelemetry.getDirectionCombined(),
         this.currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value)
       ];
 
