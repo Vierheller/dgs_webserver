@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 //
 
+
+
+
 html, body {
   height: 100vh;
   margin:0;
@@ -8,9 +11,11 @@ html, body {
   overflow: hidden;
 }
 
+
+
 main{
-  margin-top:  64px;
-  margin-bottom:  70px;
+  margin-top:  56px;
+  margin-bottom: 70px;
   overflow-y:  auto;
   height: calc(100vh - 70px - 64px);
 }
@@ -41,3 +46,26 @@ main{
 .leaflet-container{
   height: 100%;
 }
+
+// Extra small devices (portrait phones, less than 576px)
+// No media query since this is the default in Bootstrap
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {  }
+
+// Where the header height changes
+@media (min-width: 600px){
+  main{
+    margin-top:  64px;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {  }
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {  }
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {  }
+
