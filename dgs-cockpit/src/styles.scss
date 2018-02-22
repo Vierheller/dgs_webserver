@@ -1,19 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 //
 
-html, body, main {
+html, body {
   height: 100vh;
   margin:0;
   padding:0;
-  overflow: auto;
+  overflow: hidden;
+}
+
+main{
+  margin-top:  64px;
+  margin-bottom:  70px;
+  overflow-y:  auto;
+  height: calc(100vh - 70px - 64px);
 }
 
 .container{
-  margin-bottom: 70px;
-  margin-top: 64px;
   position: relative;
 
-  min-height: calc(100% - 64px - 70px);;
+  min-height: 100%;
 
   padding-top: 15px;
   padding-bottom: 15px;
