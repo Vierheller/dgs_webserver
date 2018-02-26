@@ -52,7 +52,7 @@ export class TelemetryService {
           promises.push(this.dataService.localDb.get(id));
         }
         Promise.all(promises).then(function (docs) {
-          return docs.map(doc => new TelemetryObject(doc.data) );
+          return docs.map(doc => TelemetryObject.createTelemetryObject(doc.data));
         })
         .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
         .catch((error) => { console.log(error); });
@@ -73,7 +73,7 @@ export class TelemetryService {
     if (id) {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
-        return new TelemetryObject(doc.data);
+        return TelemetryObject.createTelemetryObject(doc.data);
     })
     .catch((error) => {console.log(error); });
     }

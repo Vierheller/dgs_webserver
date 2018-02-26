@@ -21,7 +21,6 @@ export class TimelineComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectedTelemetry = new TelemetryObject();
 
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
       this.telemetryList = teleObjects;

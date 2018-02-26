@@ -11,7 +11,6 @@ export class FooterComponent implements OnInit {
   lastTel: TelemetryObject;
 
   constructor(private telemetryService: TelemetryService) {
-    this.lastTel = new TelemetryObject();
   }
 
   ngOnInit() {

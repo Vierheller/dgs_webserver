@@ -28,7 +28,6 @@ export class TelemetryComponent implements OnInit {
     this.outputWeather = new Array<TelemetryElement>();
     this.outputMovement = new Array<TelemetryElement>();
     this.outputOthers = new Array<TelemetryElement>();
-    this.telemetryList.push(new TelemetryObject());
     this.generateTelemetryToOutput();   // set the init values to UI
   }
 
@@ -57,6 +56,9 @@ export class TelemetryComponent implements OnInit {
   generateTelemetryToOutput() {
     if (this.currTelePtr >= 0) {
       const currentTelemetry = this.telemetryList[this.currTelePtr];
+      if (!currentTelemetry) {
+        return;
+      }
 
       this.outputWeather = [
         currentTelemetry.getPressure(),
