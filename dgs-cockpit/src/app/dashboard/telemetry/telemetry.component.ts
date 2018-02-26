@@ -56,7 +56,7 @@ export class TelemetryComponent implements OnInit {
   // build list for UI
   generateTelemetryToOutput() {
     if (this.currTelePtr >= 0) {
-      let currentTelemetry = this.telemetryList[this.currTelePtr];
+      const currentTelemetry = this.telemetryList[this.currTelePtr];
 
       this.outputWeather = [
         currentTelemetry.getPressure(),
@@ -70,15 +70,20 @@ export class TelemetryComponent implements OnInit {
       this.outputMovement = [
         currentTelemetry.getDMS(),
         currentTelemetry.getTime(),
-        //currentTelemetry.getLat(),
-        //currentTelemetry.getLon(),
+        // currentTelemetry.getLat(),
+        // currentTelemetry.getLon(),
         currentTelemetry.getAlt(),
         currentTelemetry.getSpeed(),
         currentTelemetry.getDirectionCombined(),
-        currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value)
+        currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value),
+        currentTelemetry.getCDA(),
+        currentTelemetry.getPredictedLatitude(),
+        currentTelemetry.getPredictedLongitude(),
+        currentTelemetry.getPredictedLandingSpeed(),
+        currentTelemetry.getPredictedTimeToLanding()
       ];
 
-      if(this.currTelePtr > 0) {
+      if (this.currTelePtr > 0) {
         this.outputMovement.push(currentTelemetry.getRiseRate(
           this.telemetryList[this.currTelePtr - 1].getAlt().value,
           this.telemetryList[this.currTelePtr - 1].getTime().value
@@ -91,16 +96,16 @@ export class TelemetryComponent implements OnInit {
       }
 
       this.outputOthers = [
-        //currentTelemetry.getClass(),
-        //currentTelemetry.getIndex(),
+        currentTelemetry.getClass(),
+        // currentTelemetry.getIndex(),
         currentTelemetry.getSatellites(),
         currentTelemetry.getChannel(),
-        //currentTelemetry.getPayload(),
+        // currentTelemetry.getPayload(),
         currentTelemetry.getPackageCounter(),
         currentTelemetry.getTimestampConverted(),
-        //currentTelemetry.getType(),
-        //currentTelemetry.getBatteryVoltage(),
-        //currentTelemetry.getCurrentVoltage(),
+        // currentTelemetry.getType(),
+        // currentTelemetry.getBatteryVoltage(),
+        // currentTelemetry.getCurrentVoltage(),
       ];
     }
   }
