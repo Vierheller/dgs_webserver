@@ -18,9 +18,10 @@ export class MapComponent implements OnInit {
   line: Polyline = new Polyline([], this.lineOptions);
 
   predictionMarkers: LayerGroup = new LayerGroup();
-  predictionLine: Polyline = new Polyline([], this.lineOptions);
+  predictionLineOptions = {color: 'red', smoothFactor: 2.0};
+  predictionLine: Polyline = new Polyline([], this.predictionLineOptions);
 
-  fitBoundOptions: FitBoundsOptions = { maxZoom : 5, animate: true};
+  fitBoundOptions: FitBoundsOptions = { maxZoom : 10, animate: true};
 
   LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -33,14 +34,16 @@ export class MapComponent implements OnInit {
     },
     overlays: {
        'Pakete': this.markers,
-       'Zurückgelegter Weg': this.line
+       'Zurückgelegter Weg': this.line,
+       'Landepunkt (Vorhersage)': this.predictionMarkers,
+       'Luftlinie Landepunkt': this.predictionLine
     }
   };
 
   // Set the initial set of displayed layers (we could also use the leafletLayers input binding for this)
   options = {
-    layers: [ this.LAYER_OSM, this.markers, this.line ],
-    zoom: 7,
+    layers: [ this.LAYER_OSM, this.markers, this.line, this.predictionMarkers, this.predictionLine ],
+    zoom: 10,
     center: latLng([ 46.879966, 8.726909 ])
   };
 
@@ -51,19 +54,24 @@ export class MapComponent implements OnInit {
           this.addMarkerFromTelemetryObject(teleObject);
         });
         this.addLinesBetweenMarkers();
+        this.addPredictionMarker(teleObjects[teleObjects.length - 1]);
+        this.addPredictionLine(teleObjects[teleObjects.length - 1]);
 
         if (this.activeMap) {
-          console.log('Called fit to bounds');
+          this.activeMap.setZoom(10);
           this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
         }
       });
   }
 
   ngOnInit() {
-
+    if (this.activeMap) {
+      this.activeMap.invalidateSize();
+      this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
+    }
   }
 
-  addMarkerFromTelemetryObject(teleObj: TelemetryObject) {
+  createMarkerFromTelemetryObject(teleObj: TelemetryObject): Marker {
     const popup = this.createPopupFromTelemetryObject(teleObj);
     const newMarker = new Marker(
         [ teleObj.lat, teleObj.lon ],
@@ -77,7 +85,11 @@ export class MapComponent implements OnInit {
         }
     );
     newMarker.bindPopup(popup);
-    this.markers.addLayer(newMarker);
+    return newMarker;
+  }
+
+  addMarkerFromTelemetryObject(teleObj: TelemetryObject) {
+    this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
   }
 
   addLinesBetweenMarkers() {
@@ -87,6 +99,18 @@ export class MapComponent implements OnInit {
         this.line.addLatLng(currentMarker.getLatLng());
       }
     }
+  }
+
+  addPredictionMarker(lastTelemetryObject: TelemetryObject) {
+    if (this.predictionMarkers.getLayers().length > 0) {
+      this.predictionMarkers = this.predictionMarkers.removeLayer(0);
+    }
+    this.predictionMarkers.addLayer(this.createMarkerFromTelemetryObject(lastTelemetryObject));
+  }
+
+  addPredictionLine(lastTelemetryObject: TelemetryObject) {
+    this.predictionLine.addLatLng(latLng(lastTelemetryObject.lat, lastTelemetryObject.lon, lastTelemetryObject.alt));
+    this.predictionLine.addLatLng(latLng(lastTelemetryObject.pred_lat, lastTelemetryObject.pred_lng));
   }
 
   createPopupFromTelemetryObject(teleObj: TelemetryObject): string {
@@ -121,7 +145,16 @@ export class MapComponent implements OnInit {
       this.markers.getLayers().pop();
   }
 
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngAfterContentChecked() {
+    if (this.activeMap) {
+      setTimeout(() => {
+        this.activeMap.invalidateSize();
+      }, 0);
+    }
+  }
+
   onMapReady(map: Map) {
     this.activeMap = map;
-}
+  }
 }
