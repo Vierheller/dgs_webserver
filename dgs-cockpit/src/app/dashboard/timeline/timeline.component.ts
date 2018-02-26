@@ -59,17 +59,17 @@ export class TimelineComponent implements OnInit {
 
   // recursive
   playTrackedData() {
-    if (this.timelineValue === this.timelineMax) {
-      if (this.repeatMode) {
-        this.timelineValue = 1;
-      } else {
-        this.togglePlayButton();
-        return;
-      }
+    if(this.repeatMode && this.timelineValue > this.timelineMax) {
+      this.timelineValue = 1;
     }
 
     this.telemetryService.timelineEvent.emit(this.timelineValue - 1);
     this.selectedTelemetry = this.telemetryList[this.timelineValue - 1];
+
+    if (!this.repeatMode && this.timelineValue === this.timelineMax) {
+      this.togglePlayButton();
+      return;
+    }
 
     setTimeout(() => {
       if (this.playMode) {
