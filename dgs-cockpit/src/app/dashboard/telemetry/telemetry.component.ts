@@ -14,7 +14,7 @@ export class TelemetryComponent implements OnInit {
   collapseState: string;
   collapseText: string;
   historyMode: boolean;
-  currentTelemetry: TelemetryObject;
+  currTelePtr: number;
   telemetryList: Array<TelemetryObject>;
   outputWeather: Array<TelemetryElement>;
   outputMovement: Array<TelemetryElement>;
@@ -23,12 +23,12 @@ export class TelemetryComponent implements OnInit {
   constructor(private telemetryService: TelemetryService) {
     this.collapseText = 'Parameter einblenden';
     this.historyMode = false;
+    this.currTelePtr = 0;
     this.telemetryList = new Array<TelemetryObject>();
-    this.currentTelemetry = new TelemetryObject();
     this.outputWeather = new Array<TelemetryElement>();
     this.outputMovement = new Array<TelemetryElement>();
     this.outputOthers = new Array<TelemetryElement>();
-    this.telemetryList.push(this.currentTelemetry);
+    this.telemetryList.push(new TelemetryObject());
     this.generateTelemetryToOutput();   // set the init values to UI
   }
 
@@ -37,7 +37,7 @@ export class TelemetryComponent implements OnInit {
       this.telemetryList = teleObjects;
 
       if (!this.historyMode) {
-        this.currentTelemetry = teleObjects[teleObjects.length - 1];
+        this.currTelePtr = teleObjects.length - 1;
         this.generateTelemetryToOutput();
       }
     });
@@ -45,7 +45,7 @@ export class TelemetryComponent implements OnInit {
     // when custom time has been selected by user
     this.telemetryService.timelineEvent.subscribe((index) => {
       if (this.telemetryList) {
-        this.currentTelemetry = this.telemetryList[index];
+        this.currTelePtr = index;
         this.generateTelemetryToOutput();
 
         this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
@@ -55,38 +55,52 @@ export class TelemetryComponent implements OnInit {
 
   // build list for UI
   generateTelemetryToOutput() {
-    if (this.currentTelemetry) {
+    if (this.currTelePtr >= 0) {
+      let currentTelemetry = this.telemetryList[this.currTelePtr];
+
       this.outputWeather = [
-        this.currentTelemetry.getPressure(),
-        this.currentTelemetry.getHumidity(),
-        this.currentTelemetry.getWindDirection(),
-        this.currentTelemetry.getTempExtern(),
-        this.currentTelemetry.getTempCase(),
-        this.currentTelemetry.getTempChip(),
+        currentTelemetry.getPressure(),
+        currentTelemetry.getHumidity(),
+        currentTelemetry.getWindDirection(),
+        currentTelemetry.getTempExtern(),
+        currentTelemetry.getTempCase(),
+        currentTelemetry.getTempChip(),
       ];
 
       this.outputMovement = [
-        this.currentTelemetry.getDMS(),
-        this.currentTelemetry.getTime(),
-        //this.currentTelemetry.getLat(),
-        //this.currentTelemetry.getLon(),
-        this.currentTelemetry.getAlt(),
-        this.currentTelemetry.getSpeed(),
-        this.currentTelemetry.getDirectionCombined(),
-        this.currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value)
+        currentTelemetry.getDMS(),
+        currentTelemetry.getTime(),
+        //currentTelemetry.getLat(),
+        //currentTelemetry.getLon(),
+        currentTelemetry.getAlt(),
+        currentTelemetry.getSpeed(),
+        currentTelemetry.getDirectionCombined(),
+        currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value)
       ];
 
+      if(this.currTelePtr > 0) {
+        this.outputMovement.push(currentTelemetry.getRiseRate(
+          this.telemetryList[this.currTelePtr - 1].getAlt().value,
+          this.telemetryList[this.currTelePtr - 1].getTime().value
+        ));
+      } else {
+        this.outputMovement.push(currentTelemetry.getRiseRate(
+          currentTelemetry.getAlt().value,
+          currentTelemetry.getTime().value
+        ));
+      }
+
       this.outputOthers = [
-        //this.currentTelemetry.getClass(),
-        //this.currentTelemetry.getIndex(),
-        this.currentTelemetry.getSatellites(),
-        this.currentTelemetry.getChannel(),
-        //this.currentTelemetry.getPayload(),
-        this.currentTelemetry.getPackageCounter(),
-        this.currentTelemetry.getTimestampConverted(),
-        //this.currentTelemetry.getType(),
-        //this.currentTelemetry.getBatteryVoltage(),
-        //this.currentTelemetry.getCurrentVoltage(),
+        //currentTelemetry.getClass(),
+        //currentTelemetry.getIndex(),
+        currentTelemetry.getSatellites(),
+        currentTelemetry.getChannel(),
+        //currentTelemetry.getPayload(),
+        currentTelemetry.getPackageCounter(),
+        currentTelemetry.getTimestampConverted(),
+        //currentTelemetry.getType(),
+        //currentTelemetry.getBatteryVoltage(),
+        //currentTelemetry.getCurrentVoltage(),
       ];
     }
   }
