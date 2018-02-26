@@ -62,29 +62,14 @@ export class TelemetryComponent implements OnInit {
 
       this.outputWeather = [
         currentTelemetry.getPressure(),
-        currentTelemetry.getHumidity(),
+        // currentTelemetry.getHumidity(),
         currentTelemetry.getWindDirection(),
         currentTelemetry.getTempExtern(),
         currentTelemetry.getTempCase(),
         currentTelemetry.getTempChip(),
       ];
 
-      this.outputMovement = [
-        currentTelemetry.getDMS(),
-        currentTelemetry.getTime(),
-        // currentTelemetry.getLat(),
-        // currentTelemetry.getLon(),
-        currentTelemetry.getAlt(),
-        currentTelemetry.getSpeed(),
-        currentTelemetry.getDirectionCombined(),
-        currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value),
-        currentTelemetry.getCDA(),
-        currentTelemetry.getPredictedLatitude(),
-        currentTelemetry.getPredictedLongitude(),
-        currentTelemetry.getPredictedLandingSpeed(),
-        currentTelemetry.getPredictedTimeToLanding()
-      ];
-
+      // add rise rate
       if (this.currTelePtr > 0) {
         this.outputMovement.push(currentTelemetry.getRiseRate(
           this.telemetryList[this.currTelePtr - 1].getAlt().value,
@@ -97,6 +82,22 @@ export class TelemetryComponent implements OnInit {
         ));
       }
 
+      this.outputMovement = [
+        currentTelemetry.getDMS(),
+        // currentTelemetry.getLat(),
+        // currentTelemetry.getLon(),
+        currentTelemetry.getAlt(),
+        currentTelemetry.getSpeed(),
+        currentTelemetry.getDirectionCombined(),
+        currentTelemetry.getDistance(this.telemetryList[0].getLat().value, this.telemetryList[0].getLon().value),
+        // currentTelemetry.getCDA(),
+        // currentTelemetry.getPredictedLatitude(),
+        // currentTelemetry.getPredictedLongitude(),
+        currentTelemetry.getPredictedDMS(),
+        currentTelemetry.getPredictedLandingSpeed(),
+        currentTelemetry.getPredictedTimeToLanding()
+      ];
+
       this.outputOthers = [
         currentTelemetry.getClass(),
         // currentTelemetry.getIndex(),
@@ -104,6 +105,7 @@ export class TelemetryComponent implements OnInit {
         currentTelemetry.getChannel(),
         // currentTelemetry.getPayload(),
         currentTelemetry.getPackageCounter(),
+        currentTelemetry.getTime(),
         currentTelemetry.getTimestampConverted(),
         // currentTelemetry.getType(),
         // currentTelemetry.getBatteryVoltage(),
