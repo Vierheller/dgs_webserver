@@ -17,14 +17,14 @@
 </ngx-charts-line-chart>
 -->
 <div style="display: block" class="animated flipInX">
-  <canvas mdbChart 
+  <canvas mdbChart
       [chartType]="chartType"
-      [datasets]="chartDatasets" 
+      [datasets]="chartDatasets"
       [labels]="chartLabels"
       [colors]="chartColors"
       [options]="chartOptions"
       [legend]="true"
-      (chartHover)="chartHovered($event)" 
+      (chartHover)="chartHovered($event)"
       (chartClick)="chartClicked($event)">
   </canvas>
 </div>
