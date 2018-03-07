@@ -16,7 +16,6 @@ export class LogComponent implements OnInit {
 
   ngOnInit() {
     this.logService.getLogsObservable().subscribe((lines) => {
-      console.log('COMPONENT DATA: ' + lines);
       this.logList = lines;
     });
   }

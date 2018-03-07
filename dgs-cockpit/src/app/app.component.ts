@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {EventEmitter} from "events";
+import {EventEmitter} from 'events';
 
 @Component({
   selector: 'app-root',

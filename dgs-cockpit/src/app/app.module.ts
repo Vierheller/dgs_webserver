@@ -19,7 +19,6 @@ import { TelemetryService } from './services/telemetry.service';
 import { ImageService } from './services/image.service';
 import { LogService } from './services/log.service';
 import { MapComponent } from './map/map.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 @NgModule({
@@ -41,7 +40,6 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     MDBBootstrapModule.forRoot(),
     BrowserModule,
     BrowserAnimationsModule,
-    NgxChartsModule,
     LeafletModule.forRoot()
   ],
   providers: [

@@ -5,8 +5,8 @@ PouchDB.plugin(PouchFind);
 
 @Injectable()
 export class DatabaseConnectorService {
-  public localDb: any;
-  private remoteDb: any;
+  public localDb: PouchDB.Database;
+  private remoteDb: PouchDB.Database;
   private remote = 'http://admin:admin@127.0.0.1:5984/dgs';
   private isInstantiated: boolean;
 
@@ -20,15 +20,14 @@ export class DatabaseConnectorService {
 
     this.localDb.sync(this.remoteDb, {
       live: true,
-      retry: true,
-      continuous: true
+      retry: true
     }).on('change', function (change) {
       console.log('DB change oocured.');
       this.listener.emit(change);
     }).on('paused', function (info) {
       console.log('DB Replication paused.');
-    }).on('active', function (info) {
-      console.log('DB Replication resumed.');
+    }).on('denied', function (info) {
+      console.log('DB Replication denied.');
     }).on('error', function (err) {
       console.log('DB Fatal error while replicating!');
     });

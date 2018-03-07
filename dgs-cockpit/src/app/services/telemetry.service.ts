@@ -22,7 +22,7 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 @Injectable()
 export class TelemetryService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
-  private telemetryIDsObservable: Observable<Array<String>>;
+  private telemetryIDsObservable: Observable<Array<string>>;
   private telemetriesObservable: Observable<Array<TelemetryObject>>;
   public timelineEvent: EventEmitter<number>;
 
@@ -43,7 +43,7 @@ export class TelemetryService {
           console.log(error);
         });
       });
-    }).shareReplay() as Observable<Array<String>>;
+    }).shareReplay() as Observable<Array<string>>;
 
     this.telemetriesObservable = this.telemetryIDsObservable.flatMap((ids) => {
       return Observable.create(subscriber => {
@@ -59,9 +59,12 @@ export class TelemetryService {
       });
     }).shareReplay() as Observable<Array<TelemetryObject>>;
 
-    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-        this.reloadSubject.next(void 0);
-    });
+    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true, view: 'telemetry/allDocuments/'})
+      .on('complete', (change) => {
+        // if (change.doc && change.doc.data && change.doc.data.type === 'telemetry') {
+          this.reloadSubject.next(void 0);
+        // }
+      });
   }
 
   // Kann von aussen aufgerufen werden

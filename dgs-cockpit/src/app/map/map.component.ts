@@ -103,7 +103,7 @@ export class MapComponent implements OnInit {
 
   addPredictionMarker(lastTelemetryObject: TelemetryObject) {
     if (this.predictionMarkers.getLayers().length > 0) {
-      this.predictionMarkers = this.predictionMarkers.removeLayer(0);
+      // this.predictionMarkers = this.predictionMarkers.removeLayer(0);
     }
     this.predictionMarkers.addLayer(this.createMarkerFromTelemetryObject(lastTelemetryObject));
   }

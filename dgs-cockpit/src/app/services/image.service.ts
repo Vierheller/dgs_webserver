@@ -21,7 +21,7 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 @Injectable()
 export class ImageService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
-  private imageIDsObservable: Observable<Array<String>>;
+  private imageIDsObservable: Observable<Array<string>>;
   private imagesObservable: Observable<Array<ImageObject>>;
 
   constructor(public dataService: DatabaseConnectorService) {
@@ -39,7 +39,7 @@ export class ImageService {
             console.log(error);
           });
       });
-    }).shareReplay() as Observable<Array<String>>;
+    }).shareReplay() as Observable<Array<string>>;
 
     this.imagesObservable = this.imageIDsObservable.flatMap((ids) => {
       return Observable.create(subscriber => {
@@ -55,12 +55,11 @@ export class ImageService {
       });
     }).shareReplay() as Observable<Array<ImageObject>>;
 
-    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-      this.reloadSubject.next(void 0);
-    });
-
-    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true}).on('change', (change) => {
-      this.reloadSubject.next(void 0);
+    this.dataService.localDb.changes({live: true, since: 'now', include_docs: true, view: 'image/allDocuments/'})
+      .on('complete', (change) => {
+      // if (change.doc && change.doc.data && change.doc.data.type === 'image') {
+        this.reloadSubject.next(void 0);
+      // }
     });
   }
 
