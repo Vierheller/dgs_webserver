@@ -38,7 +38,7 @@ export class ChartComponent implements OnInit {
 
   initializeChart() {
     for (let index = 0; index < this.parameter.length; index++) {
-      this.chartDatasets.push(new Series([], this.parameter[index]));
+      this.chartDatasets.push(new Series([], telemetryDictonary[this.parameter[index]].name));
       this.chartColors.push(new SeriesStyling());
     }
   }
@@ -49,12 +49,12 @@ export class ChartComponent implements OnInit {
     if (this.parameter) {
       for (const str of this.parameter) {
         const result = this.chartDatasets.find(series => {
-          return series.label === str;
+          return series.label === telemetryDictonary[str].name;
         });
 
         if (result) {
           result.data.push(tele[str]);
-          //result.label = telemetryDictonary[str].name;
+          result.label = telemetryDictonary[str].name;
         }
       }
     }
