@@ -17,6 +17,4 @@ export class AppComponent {
   onMenuSelected(menu: string) {
     this.selectedItem = menu;
   }
-
-
 }
