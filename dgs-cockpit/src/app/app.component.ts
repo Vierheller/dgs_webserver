@@ -11,7 +11,7 @@ export class AppComponent {
   selectedItem: string;
 
   constructor() {
-    EventEmitter.prototype.setMaxListeners(100);  // disable warning
+    // EventEmitter.prototype.setMaxListeners(100);  // disable warning
   }
 
   onMenuSelected(menu: string) {
