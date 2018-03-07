@@ -3,8 +3,11 @@ import { DatabaseConnectorService } from './database-connector/database-connecto
 import { Subject } from 'rxjs/Subject';
 import { Log } from '../models/Log';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
 import { Promise } from 'bluebird';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import index from '@angular/cli/lib/cli';
 
 
 /*
@@ -25,45 +28,44 @@ Design Document (erforderlich um die Query zu ermöglichen!!)
 export class LogService {
   private reloadSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
   private logIDsObservable: Observable<Array<string>>;
-  private logsObservable: Observable<Array<Log>>;
-
   // private logIDsSubject: BehaviorSubject<void> = new BehaviorSubject(void 0);
   // private logsObservable: Observable<Array<Log>>;
 
   constructor(public dataService: DatabaseConnectorService) {
       // Hat sich die lokale DB geändert? (Das wird durch eine Änderung der CouchDB initiiert)
-      this.logIDsObservable = this.reloadSubject.flatMap(_ => {
-        return Observable.create(subscriber => {
-          this.dataService.localDb.query('log/allDocuments/')
+      this.logIDsObservable = this.reloadSubject.switchMap(_ => {
+      return Observable.create(subscriber => {
+        this.dataService.localDb.query('log/allDocuments/')
           .then((data) => {
+            console.log('Got new ids');
             const dataset = data.rows.map(row => {
               return row.id;
-            });
+            }).reverse();
+
             subscriber.next(dataset);
-            subscriber.complete();
           })
           .catch((error) => {
             console.log(error);
           });
-        });
-      }).shareReplay() as Observable<Array<string>>;
+      });
+    }).shareReplay() as Observable<Array<string>>;
 
-      this.logsObservable = this.logIDsObservable.flatMap((ids) => {
-        return Observable.create(subscriber => {
-          const promises: Array<Promise<any>> = [];
-          for (const id of ids) {
-            promises.push(this.dataService.localDb.get(id));
-          }
-          Promise.all(promises).then(function (docs) {
-            return docs.map(doc => <Log>doc.data); // TelemetryObject.createTelemetryObject(doc.data));
-          })
-          .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
-          .catch((error) => { console.log(error); });
-        });
-      }).shareReplay() as Observable<Array<Log>>;
+    // this.logsObservable = this.logIDsObservable.switchMap((ids) => {
+    //   return Observable.create(subscriber => {
+    //     const promises: Array<Promise<any>> = [];
+    //     for (const id of ids) {
+    //       promises.push(this.dataService.localDb.get(id));
+    //     }
+    //     Promise.all(promises).then(function (docs) {
+    //       return docs.map(doc => <Log>doc.data); // TelemetryObject.createTelemetryObject(doc.data));
+    //     })
+    //       .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
+    //       .catch((error) => { console.log(error); });
+    //   });
+    // }).shareReplay() as Observable<Array<Log>>;
 
       this.dataService.localDb.changes({live: true, since: 'now', include_docs: true, view: 'log/allDocuments/'})
-        .on('complete', (change) => {
+        .on('change', (change) => {
           /*if (change.doc && change.doc.data && change.doc.data.type === 'log') {
             this.reloadSubject.next(void 0);
           }*/
@@ -72,9 +74,33 @@ export class LogService {
       // this.loadData();
   }
 
+
+
   // Kann von aussen aufgerufen werden
-  public getLogsObservable(): Observable<Array<Log>> {
-    return this.logsObservable;
+  public getLogsObservable(page: number, rowsPerPage: number): Observable<Array<Log>> {
+    const skip = (page - 1) * rowsPerPage;
+    const limit = page * rowsPerPage;
+    console.log('Requesting new data for skip: ' + skip + ' limit: ' + limit);
+    return this.getObservable(skip, limit);
+  }
+
+  getObservable(skip: number, limit: number): Observable<Array<Log>> {
+    return this.logIDsObservable.switchMap((ids: Array<string>) => {
+      return Observable.create(subscriber => {
+        const promises: Array<Promise<any>> = [];
+
+        ids = ids.slice(skip, limit);
+
+        for (const id of ids) {
+          promises.push(this.dataService.localDb.get(id));
+        }
+        Promise.all(promises).then(function (docs) {
+          return docs.map(doc => <Log>doc.data); // TelemetryObject.createTelemetryObject(doc.data));
+        })
+          .then(tmtries => { subscriber.next(tmtries); subscriber.complete(); } )
+          .catch((error) => { console.log(error); });
+      });
+    }).shareReplay() as Observable<Array<Log>>;
   }
 
   /*private loadData() {

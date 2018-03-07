@@ -1,3 +1,6 @@
+<div>Page: {{page}}</div>
 <ul class="list-group">
   <li *ngFor="let line of logList" class="list-group-item">{{line.timestamp}} : {{line.data}}</li>
 </ul>
+<button (click)="nextPage()" >Next Page</button>
+<button (click)="prevPage()">Previous Page</button>
