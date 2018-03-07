@@ -48,14 +48,13 @@ export class ChartComponent implements OnInit {
 
     if (this.parameter) {
       for (const str of this.parameter) {
-        const result = this.chartDatasets.find(series => series.label === str);
+        const result = this.chartDatasets.find(series => {
+          return series.label === str;
+        });
 
         if (result) {
-          for (const p in tele) {
-            if (p === str) {
-              result.data.push(tele[p]);
-            }
-          }
+          result.data.push(tele[str]);
+          //result.label = telemetryDictonary[str].name;
         }
       }
     }
@@ -68,10 +67,6 @@ export class ChartComponent implements OnInit {
   public chartHovered(e: any): void {
 
   }
-}
-
-export class SeriesEntry {
-  constructor(public name: Date | string, public value: number) {}
 }
 
 export class Series {
@@ -88,6 +83,5 @@ export class SeriesStyling {
     public pointBorderColor: string =  '#fff',
     public pointHoverBackgroundColor: string =  '#fff',
     public pointHoverBorderColor: string =  'rgba(220,220,220,1)') {
-
   }
 }
