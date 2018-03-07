@@ -72,7 +72,8 @@ export class ImageService {
     if (id) {
       return this.dataService.localDb.get(id)
         .then(function (doc) {
-          return new Image(doc.data);
+          const test: any = doc;
+          return new Image(test.data);
         })
         .catch((error) => {
           console.log(error);

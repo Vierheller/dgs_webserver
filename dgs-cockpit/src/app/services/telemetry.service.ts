@@ -76,7 +76,8 @@ export class TelemetryService {
     if (id) {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
-        return TelemetryObject.createTelemetryObject(doc.data);
+        const test: any = doc;
+        return TelemetryObject.createTelemetryObject(test.data);
     })
     .catch((error) => {console.log(error); });
     }

@@ -93,7 +93,8 @@ export class LogService {
   public getLogById(id: string): Promise<Log> {
     return this.dataService.localDb.get(id)
       .then(function (doc) {
-        return <Log>doc.data;
+        const test: any = doc;
+        return <Log>test.data;
     })
     .catch((error) => {console.log(error); });
   }
