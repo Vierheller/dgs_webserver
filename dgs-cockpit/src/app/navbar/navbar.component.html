@@ -1,11 +1,11 @@
 <mdb-navbar SideClass="navbar fixed-top navbar-expand-lg navbar-dark stylish-color-dark scrolling-navbar" [containerInside]="false">
   <logo>
-    <a class="logo navbar-brand" href="#"><strong>DHBW goes Space</strong></a>
+    <a class="logo navbar-brand" routerLink="/dashboard" routerLinkActive="active"><strong>DHBW goes Space</strong></a>
   </logo>
   <links>
     <ul class="navbar-nav mr-auto">
       <li [ngClass]="{'active': this.selectedItem === 'dashboard'}" class="nav-item waves-light" mdbRippleRadius>
-        <a routerLink="/dashboard" routerLinkActive="active" (click)="this.selectedItem('dashboard')" name="dashboard" class="nav-link"><i class="fa fa-tachometer navbar-icon" aria-hidden="true"></i>Dashboard</a>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="this.selectItem('dashboard')" name="dashboard" class="nav-link"><i class="fa fa-tachometer navbar-icon" aria-hidden="true"></i>Dashboard</a>
       </li>
       <li [ngClass]="{'active': this.selectedItem === 'map'}" class="nav-item waves-light" mdbRippleRadius>
         <a routerLink="/map" routerLinkActive="active" (click)="this.selectItem('map')" class="nav-link"><i class="fa fa-map navbar-icon" aria-hidden="true"></i>Karte</a>
