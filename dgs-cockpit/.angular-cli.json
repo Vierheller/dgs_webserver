@@ -28,9 +28,7 @@
         "../node_modules/font-awesome/scss/font-awesome.scss",
         "../node_modules/angular-bootstrap-md/scss/bootstrap/bootstrap.scss",
         "../node_modules/angular-bootstrap-md/scss/mdb-free.scss",
-        "../node_modules/material-design-icons/iconfont/material-icons.css",
-        "../node_modules/leaflet/dist/leaflet.css",
-        "../node_modules/@swimlane/ngx-charts/release/index.css"
+        "../node_modules/leaflet/dist/leaflet.css"
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.js",

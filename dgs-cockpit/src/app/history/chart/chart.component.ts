@@ -30,6 +30,8 @@ export class ChartComponent implements OnInit {
     this.initializeChart();
 
     this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      console.log("draw chart");
+      console.log(teleObjects);
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });
