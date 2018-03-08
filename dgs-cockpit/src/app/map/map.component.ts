@@ -49,22 +49,26 @@ export class MapComponent implements OnInit {
 
   // tslint:disable-next-line:max-line-length
   constructor(private telemetryService: TelemetryService) {
-    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
-        teleObjects.forEach((teleObject) => {
-          this.addMarkerFromTelemetryObject(teleObject);
-        });
-        this.addLinesBetweenMarkers();
-        this.addPredictionMarker(teleObjects[teleObjects.length - 1]);
-        this.addPredictionLine(teleObjects[teleObjects.length - 1]);
+    console.log('Map component created');
 
-        if (this.activeMap) {
-          this.activeMap.setZoom(10);
-          this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
-        }
+    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+      console.log('GOT MAP DATA');
+      teleObjects.forEach((teleObject) => {
+        this.addMarkerFromTelemetryObject(teleObject);
       });
+      this.addLinesBetweenMarkers();
+      this.addPredictionMarker(teleObjects[teleObjects.length - 1]);
+      this.addPredictionLine(teleObjects[teleObjects.length - 1]);
+      console.log('Current Marker Count ' + this.markers.getLayers().length);
+      /*if (this.activeMap) {
+        this.activeMap.invalidateSize();
+        this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
+      }*/
+    });
   }
 
   ngOnInit() {
+    console.log('MAP ON INIT');
     if (this.activeMap) {
       this.activeMap.invalidateSize();
       this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
@@ -89,7 +93,19 @@ export class MapComponent implements OnInit {
   }
 
   addMarkerFromTelemetryObject(teleObj: TelemetryObject) {
-    this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
+    if (teleObj.lat !== 0 && teleObj.lon !== 0) {
+      if (this.markers.getLayers().length > 10) {
+        const lastMarker = this.markers.getLayer(this.markers.getLayers().length - 1) as Marker;
+        const latDiff = Math.abs(lastMarker.getLatLng().lat - teleObj.lat);
+        const lonDiff = Math.abs(lastMarker.getLatLng().lng - teleObj.lon);
+
+        if (latDiff > 0.01 && lonDiff > 0.01) {
+          this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
+        }
+      } else {
+        this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
+      }
+    }
   }
 
   addLinesBetweenMarkers() {
@@ -105,12 +121,16 @@ export class MapComponent implements OnInit {
     if (this.predictionMarkers.getLayers().length > 0) {
       // this.predictionMarkers = this.predictionMarkers.removeLayer(0);
     }
-    this.predictionMarkers.addLayer(this.createMarkerFromTelemetryObject(lastTelemetryObject));
+    if (lastTelemetryObject.pred_lat !== 0 && lastTelemetryObject.pred_lng !== 0) {
+      this.predictionMarkers.addLayer(this.createMarkerFromTelemetryObject(lastTelemetryObject));
+    }
   }
 
   addPredictionLine(lastTelemetryObject: TelemetryObject) {
-    this.predictionLine.addLatLng(latLng(lastTelemetryObject.lat, lastTelemetryObject.lon, lastTelemetryObject.alt));
-    this.predictionLine.addLatLng(latLng(lastTelemetryObject.pred_lat, lastTelemetryObject.pred_lng));
+    if (lastTelemetryObject.pred_lat !== 0 && lastTelemetryObject.pred_lng !== 0) {
+      this.predictionLine.addLatLng(latLng(lastTelemetryObject.lat, lastTelemetryObject.lon, lastTelemetryObject.alt));
+      this.predictionLine.addLatLng(latLng(lastTelemetryObject.pred_lat, lastTelemetryObject.pred_lng));
+    }
   }
 
   createPopupFromTelemetryObject(teleObj: TelemetryObject): string {
@@ -147,11 +167,11 @@ export class MapComponent implements OnInit {
 
   // tslint:disable-next-line:use-life-cycle-interface
   ngAfterContentChecked() {
-    if (this.activeMap) {
+   /* if (this.activeMap) {
       setTimeout(() => {
         this.activeMap.invalidateSize();
       }, 0);
-    }
+    } */
   }
 
   onMapReady(map: Map) {
