@@ -21,7 +21,7 @@ export class MapComponent implements OnInit {
   predictionLineOptions = {color: 'red', smoothFactor: 2.0};
   predictionLine: Polyline = new Polyline([], this.predictionLineOptions);
 
-  fitBoundOptions: FitBoundsOptions = { maxZoom : 10, animate: true};
+  fitBoundOptions: FitBoundsOptions = {animate: true};
 
   LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -59,16 +59,16 @@ export class MapComponent implements OnInit {
       this.addLinesBetweenMarkers();
       this.addPredictionMarker(teleObjects[teleObjects.length - 1]);
       this.addPredictionLine(teleObjects[teleObjects.length - 1]);
-      console.log('Current Marker Count ' + this.markers.getLayers().length);
-      /*if (this.activeMap) {
+
+      if (this.activeMap) {
         this.activeMap.invalidateSize();
         this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
-      }*/
+      }
     });
   }
 
   ngOnInit() {
-    console.log('MAP ON INIT');
+
     if (this.activeMap) {
       this.activeMap.invalidateSize();
       this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
@@ -93,19 +93,27 @@ export class MapComponent implements OnInit {
   }
 
   addMarkerFromTelemetryObject(teleObj: TelemetryObject) {
-    if (teleObj.lat !== 0 && teleObj.lon !== 0) {
-      if (this.markers.getLayers().length > 10) {
-        const lastMarker = this.markers.getLayer(this.markers.getLayers().length - 1) as Marker;
+    if (this.isMarkerNeededToBeDrawn(teleObj)) {
+      this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
+    }
+  }
+
+  isMarkerNeededToBeDrawn(teleObj: TelemetryObject): boolean {
+    // Gültiges Lat Lng?
+    let result = (teleObj.lat !== 0 && teleObj.lon !== 0);
+
+    if (result && this.markers.getLayers().length > 2) {
+      // Gültiges Lat Lng vorhanden
+      const lastMarker = this.markers.getLayer(this.markers.getLayers().length - 1) as Marker;
+      if (lastMarker) {
+        // Differenz zum letzten Marker ermitteln
         const latDiff = Math.abs(lastMarker.getLatLng().lat - teleObj.lat);
         const lonDiff = Math.abs(lastMarker.getLatLng().lng - teleObj.lon);
-
-        if (latDiff > 0.01 && lonDiff > 0.01) {
-          this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
-        }
-      } else {
-        this.markers.addLayer(this.createMarkerFromTelemetryObject(teleObj));
+        // Differenz zu klein?
+        result = (latDiff > 0.001 && lonDiff > 0.001);
       }
     }
+    return result;
   }
 
   addLinesBetweenMarkers() {
@@ -163,15 +171,6 @@ export class MapComponent implements OnInit {
 
   removeMarker() {
       this.markers.getLayers().pop();
-  }
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngAfterContentChecked() {
-   /* if (this.activeMap) {
-      setTimeout(() => {
-        this.activeMap.invalidateSize();
-      }, 0);
-    } */
   }
 
   onMapReady(map: Map) {
