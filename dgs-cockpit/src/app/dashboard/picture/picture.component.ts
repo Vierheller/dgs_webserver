@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {ImageService} from '../../services/image.service';
 import {ImageObject} from '../../models/objects/ImageObject';
+import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-picture',
   templateUrl: './picture.component.html',
   styleUrls: ['./picture.component.css']
 })
-export class PictureComponent implements OnInit {
+export class PictureComponent implements OnInit, OnDestroy {
+  private telemetrySubscription: Subscription;
+  private imageSubscription: Subscription;
+  private timelineSubscription: Subscription;
+
+  // From timeline component
+  currentTelemetryId: BehaviorSubject<string> = new BehaviorSubject('');
+
 
   lastTelemetry: TelemetryObject;
   lastPicture: ImageObject;
@@ -29,14 +38,13 @@ export class PictureComponent implements OnInit {
     this.selIndex = 0;
 
     // get telemetry data
-    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
-      this.lastTelemetry = teleObjects[teleObjects.length - 1];
-      this.telemetryList = teleObjects;
+    this.telemetrySubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+      this.lastTelemetry = telemetry;
       this.generateOutputRows();
     });
 
     // get image data
-    this.imageService.getImageObservable().subscribe((imgObjects) => {
+    this.imageSubscription = this.imageService.getImageObservable().subscribe((imgObjects) => {
       this.lastPicture = imgObjects[imgObjects.length - 1];
       this.pictureList = imgObjects;
 
@@ -46,12 +54,18 @@ export class PictureComponent implements OnInit {
     });
 
     // when custom time has been selected by user
-    this.telemetryService.timelineEvent.subscribe((index) => {
+    this.timelineSubscription = this.telemetryService.timelineEvent.subscribe((index) => {
       if (this.pictureList) {
         this.lastPicture = this.calcNearestPicture(this.telemetryList[index].getTimestamp().value);
         this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.telemetrySubscription.unsubscribe();
+    this.timelineSubscription.unsubscribe();
+    this.imageSubscription.unsubscribe();
   }
 
   // return the picture which fits to the given timestamp most

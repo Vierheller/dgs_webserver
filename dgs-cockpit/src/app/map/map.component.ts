@@ -1,27 +1,29 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 // tslint:disable-next-line:max-line-length
 import { icon, latLng, Layer, marker, tileLayer, Popup, LatLng, Marker, Polyline, PolylineOptions, LayerGroup, Map, point, FitBoundsOptions } from 'leaflet';
 import { TelemetryService } from '../services/telemetry.service';
 import { TelemetryObject } from '../models/objects/TelemetryObject';
 import { LineString } from 'geojson';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements OnInit {
-  activeMap: Map;
-  lineOptions = {color: 'blue', smoothFactor: 2.0};
-  currentPosition =  latLng(46.879966, 8.726909);
-  markers: LayerGroup = new LayerGroup();
-  line: Polyline = new Polyline([], this.lineOptions);
+export class MapComponent implements OnInit, OnDestroy {
+  private activeMap: Map;
+  private subscription: Subscription;
+  private lineOptions = {color: 'blue', smoothFactor: 2.0};
+  private currentPosition =  latLng(46.879966, 8.726909);
+  private markers: LayerGroup = new LayerGroup();
+  private line: Polyline = new Polyline([], this.lineOptions);
 
-  predictionMarkers: LayerGroup = new LayerGroup();
-  predictionLineOptions = {color: 'red', smoothFactor: 2.0};
-  predictionLine: Polyline = new Polyline([], this.predictionLineOptions);
+  private predictionMarkers: LayerGroup = new LayerGroup();
+  private predictionLineOptions = {color: 'red', smoothFactor: 2.0};
+  private predictionLine: Polyline = new Polyline([], this.predictionLineOptions);
 
-  fitBoundOptions: FitBoundsOptions = {animate: true};
+  private fitBoundOptions: FitBoundsOptions = {animate: true};
 
   LAYER_OSM = tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -51,7 +53,7 @@ export class MapComponent implements OnInit {
   constructor(private telemetryService: TelemetryService) {
     console.log('Map component created');
 
-    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+    this.subscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       console.log('GOT MAP DATA');
       teleObjects.forEach((teleObject) => {
         this.addMarkerFromTelemetryObject(teleObject);
@@ -59,7 +61,7 @@ export class MapComponent implements OnInit {
       this.addLinesBetweenMarkers();
       this.addPredictionMarker(teleObjects[teleObjects.length - 1]);
       this.addPredictionLine(teleObjects[teleObjects.length - 1]);
-
+      console.log('Length' + teleObjects.length + ' Marker Count: ' + this.markers.getLayers().length);
       if (this.activeMap) {
         this.activeMap.invalidateSize();
         this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
@@ -73,6 +75,10 @@ export class MapComponent implements OnInit {
       this.activeMap.invalidateSize();
       this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   createMarkerFromTelemetryObject(teleObj: TelemetryObject): Marker {
@@ -110,7 +116,8 @@ export class MapComponent implements OnInit {
         const latDiff = Math.abs(lastMarker.getLatLng().lat - teleObj.lat);
         const lonDiff = Math.abs(lastMarker.getLatLng().lng - teleObj.lon);
         // Differenz zu klein?
-        result = (latDiff > 0.001 && lonDiff > 0.001);
+        result = (latDiff > 0.01 && lonDiff > 0.01);
+        console.log('LATDIFF: ' + latDiff + 'LONDIFF' + lonDiff + 'RESULT: ' + result);
       }
     }
     return result;

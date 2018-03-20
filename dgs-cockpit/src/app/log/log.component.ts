@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, OnDestroy} from '@angular/core';
 import { LogService } from '../services/log.service';
 import { Log } from '../models/Log';
 import {Observable} from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import 'rxjs/add/observable/combineLatest';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-log',
@@ -11,9 +12,9 @@ import 'rxjs/add/observable/combineLatest';
   styleUrls: ['./log.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LogComponent implements OnInit {
+export class LogComponent implements OnInit, OnDestroy {
   public logList: Log[];
-
+  private subscription: Subscription;
   page: BehaviorSubject<number> = new BehaviorSubject(1);
   private countPerPage: BehaviorSubject<number> = new BehaviorSubject(20);
 
@@ -27,8 +28,12 @@ export class LogComponent implements OnInit {
     this.loadLogs();
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   loadLogs() {
-    this.logService.getLogs(this.page, this.countPerPage).subscribe((logs: Log[]) => {
+    this.subscription = this.logService.getLogs(this.page, this.countPerPage).subscribe((logs: Log[]) => {
         this.logList = logs;
         console.log('Updated my list');
         this.ref.detectChanges();

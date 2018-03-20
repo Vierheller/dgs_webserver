@@ -29,7 +29,7 @@ export class ChartComponent implements OnInit {
   ngOnInit(): void {
     this.initializeChart();
 
-    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
+    this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });

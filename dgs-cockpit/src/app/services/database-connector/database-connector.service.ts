@@ -22,9 +22,9 @@ export class DatabaseConnectorService {
       live: true,
       retry: true
     }).on('change', function (change) {
-      console.log('DB change oocured.');
+      // console.log('DB change oocured.');
     }).on('paused', function (info) {
-      console.log('DB Replication paused.');
+      // console.log('DB Replication paused.');
     }).on('denied', function (info) {
       console.log('DB Replication denied.');
     }).on('error', function (err) {

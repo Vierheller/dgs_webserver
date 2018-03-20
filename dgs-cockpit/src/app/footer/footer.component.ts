@@ -14,8 +14,8 @@ export class FooterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.telemetryService.getTelemetryObservable().subscribe((teleObjects) => {
-      this.lastTel = teleObjects[teleObjects.length - 1];
+    this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+      this.lastTel = telemetry;
     });
   }
 }

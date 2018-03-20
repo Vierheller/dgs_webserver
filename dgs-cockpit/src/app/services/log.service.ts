@@ -38,7 +38,6 @@ export class LogService {
       return Observable.create(subscriber => {
         this.dataService.localDb.query('log/allDocuments/')
           .then((data) => {
-            console.log('Got new ids');
             const dataset = data.rows.map(row => {
               return row.id;
             }).reverse();
