@@ -7,6 +7,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { tree } from 'd3';
+import {Time} from '@angular/common';
 
 @Component({
   selector: 'app-timeline',
@@ -14,32 +15,44 @@ import { tree } from 'd3';
   styleUrls: ['./timeline.component.css']
 })
 export class TimelineComponent implements OnInit {
+  private static TIMER_INTERVAL = 1000;
+
   timelineSliderValue: number;
   timelineMax: number;
   nextTelemetryObjects: Array<TelemetryObject>;
   selectedTelemetryId: string;
 
+  private currentTelemetryObject: TelemetryObject;
+
+  // time for time based looping
+  private startTime = 0;
+  private curTime = 0;
 
   // States
-  playMode: boolean;
-  loopMode: boolean;
-  liveMode: boolean;
+  private playMode: boolean;
+  private loopMode: boolean;
+  private liveMode: boolean;
+
+  private allTelemetryIdsList: Array<string>;
 
   private timerObserver: Observable<number>;
   private timerSubscripton: Subscription;
 
-  private currentTelemetryIndex: BehaviorSubject<number> = new BehaviorSubject(0);
   private lookupSize: BehaviorSubject<number> = new BehaviorSubject(5);
 
   constructor(private telemetryService: TelemetryService) {
-    this.playMode = false;
+    this.playMode = true;
     this.loopMode = false;
     this.liveMode = true;
+
+    this.allTelemetryIdsList = [];
   }
 
   ngOnInit() {
 
     this.telemetryService.getTelemetryIdsObservable().subscribe((telemetryIds) => {
+      this.allTelemetryIdsList = telemetryIds;
+
       // Automatic Mode
       if (this.playMode && this.liveMode) { // auto update list
         this.timelineSliderValue = telemetryIds.length;
@@ -51,76 +64,85 @@ export class TimelineComponent implements OnInit {
       this.timelineMax = telemetryIds.length;
     });
 
-    this.telemetryService.getNextNTelemetry(this.currentTelemetryIndex, this.lookupSize).subscribe((nextTelemetryObjects) => {
+    this.telemetryService.getNextNTelemetry(this.telemetryService.currentTelemetryIdSubject, this.lookupSize)
+      .subscribe((nextTelemetryObjects) => {
       this.nextTelemetryObjects = nextTelemetryObjects;
+    });
+
+    this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+      this.currentTelemetryObject = telemetry;
     });
   }
 
-  // select telemetry data
+  // onChange of Timeline Slider
   changeTimeSelection(value: number) {
     if (value) {
       this.timelineSliderValue = value;
+
+      // Update Subscribers
       this.telemetryService.timelineEvent.emit(this.timelineSliderValue - 1);    // trigger timeline event
+      this.telemetryService.currentTelemetryIdSubject.next(this.allTelemetryIdsList[value - 1]);
 
-      this.telemetryService.currentTelemetryIdSubject.next(this.nextTelemetryObjects[this.timelineSliderValue - 1]);
-
-      if (this.nextTelemetryObjects) {
-        this.selectedTelemetryId = this.nextTelemetryObjects[this.timelineSliderValue - 1];
+      // When currently playing and snap to right => we are live
+      if (value === this.allTelemetryIdsList.length && this.playMode) {
+        this.liveMode = true;
       }
     }
   }
 
-  startOrStopPlayingTrackedData() {
-    if (!this.playMode) {
+  togglePlayingTrackedData() {
+    this.togglePlayButton();
+
+    if (this.playMode) {
       if (this.timelineSliderValue === this.timelineMax) {
         this.timelineSliderValue = 1;
       }
       this.playTrackedData();
-    }
-    this.togglePlayButton();
-  }
-
-  // recursive
-  playTrackedData() {
-    if (this.loopMode && this.timelineSliderValue > this.timelineMax) {
-      this.timelineSliderValue = 1;
-    }
-
-    this.telemetryService.timelineEvent.emit(this.timelineSliderValue - 1);
-    this.selectedTelemetryId = this.nextTelemetryObjects[this.timelineSliderValue - 1];
-
-    if (!this.loopMode && this.timelineSliderValue === this.timelineMax) {
-      this.togglePlayButton();
-      return;
-    }
-
-    setTimeout(() => {
-      if (this.playMode) {
-        this.timelineSliderValue++;
-        this.playTrackedData();   // next step recursive
+    } else {
+      if (this.timerSubscripton) {
+        this.timerSubscripton.unsubscribe();
       }
-    }, 2000);
+    }
   }
 
-  private play() {
-    const currentElement = this.currentTelemetryIndex;
+  playTrackedData() {
+    this.startTime = this.currentTelemetryObject.timestamp;
+    this.curTime = this.startTime;
+
+    this.timerObserver = TimerObservable.create(TimelineComponent.TIMER_INTERVAL, TimelineComponent.TIMER_INTERVAL);
+    this.timerSubscripton = this.timerObserver.subscribe(() => {
+      this.curTime += TimelineComponent.TIMER_INTERVAL;
+      this.run();
+    });
+    this.playMode = true;
+  }
+
+  private run() {
     const nextElement = this.nextTelemetryObjects[1];
+    // Can update Telemetry
+    if (nextElement && nextElement.timestamp < this.curTime) {
+      this.timelineSliderValue++;
+
+      // Begin again, when in loop and at the end of the list
+      if (this.loopMode && this.timelineSliderValue > this.timelineMax) {
+        this.timelineSliderValue = 1;
+      }
+      // Stop, when not in loop and at the end of the list
+      if (!this.loopMode && this.timelineSliderValue === this.timelineMax) {
+        this.togglePlayButton();
+      }
+
+      // Update subscribers
+      this.telemetryService.timelineEvent.emit(this.timelineSliderValue - 1);
+      this.telemetryService.currentTelemetryIdSubject.next(this.allTelemetryIdsList[this.timelineSliderValue - 1]);
+    }
   }
 
   togglePlayButton() {
     this.playMode = !this.playMode;
-
-    if (this.playMode) {
-      this.timerObserver = TimerObservable.create(0, 500);
-      this.timerSubscripton = this.timerObserver.subscribe(() => {
-        this.play();
-      });
-    } else {
-      this.timerSubscripton.unsubscribe();
-    }
   }
 
-  toggleRepeatMode() {
+  toggleRepeatButton() {
     this.loopMode = !this.loopMode;
   }
 }

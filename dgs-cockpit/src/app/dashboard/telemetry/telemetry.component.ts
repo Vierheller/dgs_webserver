@@ -30,7 +30,6 @@ export class TelemetryComponent implements OnInit {
 
   ngOnInit() {
     this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
-      console.log("Current telemetry:" + telemetry.package_counter);
       this.telemetryObject = telemetry;
       this.generateTelemetryToOutput();
       this.ref.detectChanges();

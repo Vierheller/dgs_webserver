@@ -4,21 +4,21 @@
   </div>
   <div class="card-body">
     <p class="card-text" style="float:left;">
-      <a (click)="startOrStopPlayingTrackedData()">
+      <a (click)="togglePlayingTrackedData()">
         <i *ngIf="!this.playMode" class="fa fa-play" aria-hidden="true"></i>
         <i *ngIf="this.playMode" class="fa fa-stop blue-text" aria-hidden="true"></i>
       </a>
       &nbsp;
-      <a (click)="toggleRepeatMode()">
+      <a (click)="toggleRepeatButton()">
         <i *ngIf="!this.repeatMode" class="fa fa-retweet" aria-hidden="true"></i>
-        <i *ngIf="this.repeatMode" class="fa fa-retweet blue-text" aria-hidden="true"></i>
+        <i *ngIf="this.loopMode" class="fa fa-retweet blue-text" aria-hidden="true"></i>
       </a>
     </p>
 
-    <p *ngIf="this.selectedTelemetry" class="card-text" style="float:right;">
-      <i class="fa fa-clock-o" aria-hidden="true"></i> {{this.selectedTelemetry.getTimestampConverted().value}}
-    </p>
+    <!-- TODO <p *ngIf="this.selectedTelemetry" class="card-text" style="float:right;">-->
+      <!--<i class="fa fa-clock-o" aria-hidden="true"></i> {{this.selectedTelemetry.getTimestampConverted().value}}-->
+    <!--</p>-->
 
-    <input (input)="changeTimeSelection($event.target.value)" type="range" min="1" step="1" [max]="this.timelineMax" [value]="this.timelineValue" class="timeline-slider">
+    <input (input)="changeTimeSelection($event.target.value)" type="range" min="1" step="1" [max]="this.timelineMax" [value]="this.timelineSliderValue" class="timeline-slider">
   </div>
 </div>

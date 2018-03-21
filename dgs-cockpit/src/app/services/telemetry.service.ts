@@ -68,45 +68,63 @@ export class TelemetryService {
       });
   }
 
-  getNextNTelemetry(currentTelemetryIndex: BehaviorSubject<number>, n: BehaviorSubject<number>) {
-    return Observable.combineLatest(this.telemetryIDsObservable, currentTelemetryIndex, n)
+  getNextNTelemetry(currentTelemetryId: BehaviorSubject<string>, n: BehaviorSubject<number>) {
+    return Observable.combineLatest(this.telemetryIDsObservable, currentTelemetryId, n)
       .flatMap((latest) => {
         return Observable.create(subscriber => {
-          const [ids, current_index, current_size] = latest;
-          const current_id = ids[current_index];
-          const promises: Array<Promise<any>> = [];
-          for (let i = current_index; i < Math.min(current_index + current_size, ids.length); i++) {
-            if (!this.isInCache(ids[i])) {
-              promises.push(this.dataService.localDb.get(ids[i]));
+          const [idsList, currentId, currentSize] = latest;
+          const indexInIdsList = idsList.indexOf(currentId);
+
+          if (indexInIdsList > -1) {
+            const promises: Array<Promise<any>> = [];
+            const startIndex = indexInIdsList;
+            const endIndex = Math.min(indexInIdsList + currentSize, idsList.length);
+
+            // Load missing Telemetries
+            for (let i = startIndex; i < endIndex; i++) {
+              if (!this.isInCache(idsList[i])) {
+                promises.push(this.dataService.localDb.get(idsList[i]));
+              }
             }
+
+            Promise.all(promises).then(function (docs) {
+              return docs.map(doc => [doc._id, TelemetryObject.createTelemetryObject(doc.data)]);
+            })
+            .then(tmtries => {
+              this.telemetryCache = this.telemetryCache.concat(tmtries);
+              const nextN = this.getNFromCache(idsList, currentId, currentSize);
+              subscriber.next(nextN);
+              subscriber.complete();
+            })
+            .catch((error) => { console.log(error); });
+          } else {
+            // TODO error handling -> currentId not found
           }
-          Promise.all(promises).then(function (docs) {
-            return docs.map(doc => [doc._id, TelemetryObject.createTelemetryObject(doc.data)]);
-          })
-          .then(tmtries => {
-            this.telemetryCache = this.telemetryCache.concat(tmtries);
-            subscriber.next(this.getNFromCache(current_id, current_size));
-            subscriber.complete();
-          })
-          .catch((error) => { console.log(error); });
         });
       }).shareReplay() as Observable<Array<TelemetryObject>>;
   }
 
-  private getNFromCache(current_id: string, n: number) {
-      let counter = 0;
-      const telemetries = [];
-      for (const pair of this.telemetryCache){
-          const [id, telemetry] = pair;
-          if (counter < n) {
-            return telemetries;
-          }
-          if (id === current_id || counter > 0) {
-            telemetries.push(telemetry);
-            counter++;
-          }
+  private getNFromCache(idsList: Array<string>, current_id: string, n: number) {
+    const idsArray = [];
+    const resultSet = [];
+
+    const startIndex = idsList.indexOf(current_id);
+    if (startIndex > -1) {
+      // Get the n ids I want to query
+      for (let i = idsList.indexOf(current_id); i < startIndex + n; i++) {
+        idsArray.push(idsList[i]);
       }
-      return telemetries;
+
+      // Get the actual data for ids
+      for (const pair of this.telemetryCache){
+        const [id, telemetry] = pair;
+        if (idsArray.includes(id)) {
+          resultSet.push(telemetry);
+        }
+      }
+
+    }
+    return resultSet;
   }
 
   private isInCache(telemetryId: string) {
