@@ -1,20 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryObject} from '../../models/objects/TelemetryObject';
 import {TimerObservable} from 'rxjs/observable/TimerObservable';
 import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { tree } from 'd3';
-import {Time} from '@angular/common';
 
 @Component({
   selector: 'app-timeline',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.css']
 })
-export class TimelineComponent implements OnInit {
+
+export class TimelineComponent implements OnInit, OnDestroy {
+  private telemetrySubscriptionIds: Subscription;
+  private telemetrySubscriptionNextN: Subscription;
+  private telemetrySubscriptionCurrent: Subscription;
   private static TIMER_INTERVAL = 1000;
 
   timelineSliderValue: number;
@@ -49,8 +50,7 @@ export class TimelineComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.telemetryService.getTelemetryIdsObservable().subscribe((telemetryIds) => {
+    this.telemetrySubscriptionIds = this.telemetryService.getTelemetryIdsObservable().subscribe((telemetryIds) => {
       this.allTelemetryIdsList = telemetryIds;
 
       // Automatic Mode
@@ -64,14 +64,20 @@ export class TimelineComponent implements OnInit {
       this.timelineMax = telemetryIds.length;
     });
 
-    this.telemetryService.getNextNTelemetry(this.telemetryService.currentTelemetryIdSubject, this.lookupSize)
+    this.telemetrySubscriptionNextN = this.telemetryService.getNextNTelemetry(this.telemetryService.currentTelemetryIdSubject, this.lookupSize)
       .subscribe((nextTelemetryObjects) => {
       this.nextTelemetryObjects = nextTelemetryObjects;
     });
 
-    this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+    this.telemetrySubscriptionCurrent = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       this.currentTelemetryObject = telemetry;
     });
+  }
+
+  ngOnDestroy() {
+    this.telemetrySubscriptionIds.unsubscribe();
+    this.telemetrySubscriptionNextN.unsubscribe();
+    this.telemetrySubscriptionCurrent.unsubscribe();
   }
 
   // onChange of Timeline Slider

@@ -1,8 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, OnDestroy} from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
-import {Promise} from 'q';
-import {TimelineComponent} from '../timeline/timeline.component';
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-telemetry',
@@ -10,7 +9,9 @@ import {TimelineComponent} from '../timeline/timeline.component';
   styleUrls: ['./telemetry.component.css']
 })
 
-export class TelemetryComponent implements OnInit {
+export class TelemetryComponent implements OnInit, OnDestroy {
+  private telemetrySubscription: Subscription;
+
   collapseState: string;
   collapseText: string;
   manualSlidingMode: boolean;
@@ -29,11 +30,15 @@ export class TelemetryComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+    this.telemetrySubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       this.telemetryObject = telemetry;
       this.generateTelemetryToOutput();
       this.ref.detectChanges();
     });
+  }
+
+  ngOnDestroy() {
+    this.telemetrySubscription.unsubscribe();
   }
 
   // build list for UI

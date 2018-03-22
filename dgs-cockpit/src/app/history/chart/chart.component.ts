@@ -1,8 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import 'rxjs/add/operator/do';
 import {telemetryDictonary} from "../../models/config/telemetryDic";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-chart',
@@ -10,7 +11,9 @@ import {telemetryDictonary} from "../../models/config/telemetryDic";
   styleUrls: ['./chart.component.css']
 })
 
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit, OnDestroy {
+  private telemetrySubscription: Subscription;
+
   @Input()  title: string;
   @Input()  parameter: string[];
 
@@ -29,11 +32,15 @@ export class ChartComponent implements OnInit {
   ngOnInit(): void {
     this.initializeChart();
 
-    this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
+    this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.telemetrySubscription.unsubscribe();
   }
 
   initializeChart() {

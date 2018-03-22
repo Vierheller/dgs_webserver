@@ -1,21 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TelemetryService} from "../services/telemetry.service";
 import {TelemetryObject} from "../models/objects/TelemetryObject";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })
-export class FooterComponent implements OnInit {
+
+export class FooterComponent implements OnInit, OnDestroy {
+  private telemetrySubscription: Subscription;
+
   lastTel: TelemetryObject;
 
   constructor(private telemetryService: TelemetryService) {
+
   }
 
   ngOnInit() {
-    this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
+    this.telemetrySubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       this.lastTel = telemetry;
     });
+  }
+
+  ngOnDestroy() {
+    this.telemetrySubscription.unsubscribe();
   }
 }

@@ -1,7 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { TelemetryService } from '../services/telemetry.service';
-import { TelemetryInternal } from '../models/Telemetry';
-import { TelemetryObject } from '../models/objects/TelemetryObject';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,7 +6,7 @@ import { TelemetryObject } from '../models/objects/TelemetryObject';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  constructor(public telemetryService: TelemetryService) {
+  constructor() {
 
   }
 }
