@@ -30,19 +30,12 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log("on init");
     this.initializeChart();
-
-    console.log("initialized");
 
     this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });
-
-      console.log("Telemetryobjects to draw: " + teleObjects.length);
-
-      //this.chartDatasets = [{data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset'}];
     });
   }
 
