@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
 // tslint:disable-next-line:max-line-length
-import { icon, latLng, Layer, marker, tileLayer, Popup, LatLng, Marker, Polyline, PolylineOptions, LayerGroup, Map, point, FitBoundsOptions } from 'leaflet';
+import { icon, latLng, tileLayer, Marker, Polyline, LayerGroup, Map, FitBoundsOptions } from 'leaflet';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { TelemetryService } from '../services/telemetry.service';
 import { TelemetryObject } from '../models/objects/TelemetryObject';
-import { LineString } from 'geojson';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -70,7 +69,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     if (this.activeMap) {
       this.activeMap.invalidateSize();
       this.activeMap.fitBounds(this.line.getBounds(), this.fitBoundOptions);
