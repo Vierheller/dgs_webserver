@@ -56,10 +56,10 @@ export class PictureComponent implements OnInit, OnDestroy {
     });
 
     // when custom time has been selected by user
-    this.timelineSubscription = this.telemetryService.timelineEvent.subscribe((index) => {
+    this.timelineSubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       if (this.pictureList) {
-        this.lastPicture = this.calcNearestPicture(this.telemetryList[index].getTimestamp().value);
-        this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
+        this.lastPicture = this.calcNearestPicture(telemetry.getTimestamp().value);
+        // this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
       }
     });
   }

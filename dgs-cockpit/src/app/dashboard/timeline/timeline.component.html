@@ -10,7 +10,7 @@
       </a>
       &nbsp;
       <a (click)="toggleRepeatButton()">
-        <i *ngIf="!this.repeatMode" class="fa fa-retweet" aria-hidden="true"></i>
+        <i *ngIf="!this.loopMode" class="fa fa-retweet" aria-hidden="true"></i>
         <i *ngIf="this.loopMode" class="fa fa-retweet blue-text" aria-hidden="true"></i>
       </a>
     </p>
@@ -19,6 +19,6 @@
       <!--<i class="fa fa-clock-o" aria-hidden="true"></i> {{this.selectedTelemetry.getTimestampConverted().value}}-->
     <!--</p>-->
 
-    <input (input)="changeTimeSelection($event.target.value)" type="range" min="1" step="1" [max]="this.timelineMax" [value]="this.timelineSliderValue" class="timeline-slider">
+    <input (input)="changeTimeSelection($event.target.value)" (change)="onChange($event.target.value)"  type="range" min="1" step="1" [max]="this.timelineMax" [value]="this.timelineSliderValue" class="timeline-slider">
   </div>
 </div>

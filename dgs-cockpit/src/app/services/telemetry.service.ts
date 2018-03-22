@@ -30,16 +30,11 @@ export class TelemetryService {
   // [id, telemetryObject]
   private telemetryCache: Array<[string, TelemetryObject]>;
 
-  // This Emitter thows events when new value was set on timeline
-  public timelineEvent: EventEmitter<number>;
-
   // While this represents the current id - over all components
   public currentTelemetryIdSubject: BehaviorSubject<string> = new BehaviorSubject('');
 
 
   constructor(public dataService: DatabaseConnectorService) {
-    this.timelineEvent = new EventEmitter<number>();
-
     this.telemetryCache = [];
 
     this.telemetryIDsObservable = this.reloadSubject.flatMap(_ => {
@@ -94,6 +89,12 @@ export class TelemetryService {
               const nextN = this.getNFromCache(idsList, currentId, currentSize);
               subscriber.next(nextN);
               subscriber.complete();
+              // Don't let chache grow too large
+              if (this.telemetryCache.length > 50) {
+                console.log("Limit Cache", this.telemetryCache.length);
+                this.telemetryCache = this.telemetryCache.slice(this.telemetryCache.length - 50, this.telemetryCache.length);
+                console.log(this.telemetryCache.length);
+              }
             })
             .catch((error) => { console.log(error); });
           } else {

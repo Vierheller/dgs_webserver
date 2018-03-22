@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, OnDestroy, Component, OnInit} from '@angular/core';
-import {TelemetryService} from "../services/telemetry.service";
-import {TelemetryObject} from "../models/objects/TelemetryObject";
-import {Subscription} from "rxjs/Subscription";
+import {TelemetryService} from '../services/telemetry.service';
+import {TelemetryObject} from '../models/objects/TelemetryObject';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-footer',
