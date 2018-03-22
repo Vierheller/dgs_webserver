@@ -4,7 +4,6 @@ import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryO
 import {ImageService} from '../../services/image.service';
 import {ImageObject} from '../../models/objects/ImageObject';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-picture',
@@ -16,23 +15,16 @@ export class PictureComponent implements OnInit, OnDestroy {
   private imageSubscription: Subscription;
   private timelineSubscription: Subscription;
 
-  // From timeline component
-  currentTelemetryId: BehaviorSubject<string> = new BehaviorSubject('');
-
-
-  lastTelemetry: TelemetryObject;
+  selTelemetry: TelemetryObject;
   lastPicture: ImageObject;
   pictureList: Array<ImageObject>;
-  telemetryList: Array<TelemetryObject>;
   smallTelemetryOutput: Array<TelemetryElement>;
   selIndex: number;
-  historyMode: boolean;
 
   constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService,
               private imageService: ImageService) {
     this.pictureList = new Array<ImageObject>();
     this.smallTelemetryOutput = new Array<TelemetryElement>();
-    this.historyMode = false;
   }
 
   ngOnInit() {
@@ -40,7 +32,7 @@ export class PictureComponent implements OnInit, OnDestroy {
 
     // get telemetry data
     this.telemetrySubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
-      this.lastTelemetry = telemetry;
+      this.selTelemetry = telemetry;
       this.generateOutputRows();
       this.ref.detectChanges();
     });
@@ -49,17 +41,12 @@ export class PictureComponent implements OnInit, OnDestroy {
     this.imageSubscription = this.imageService.getImageObservable().subscribe((imgObjects) => {
       this.lastPicture = imgObjects[imgObjects.length - 1];
       this.pictureList = imgObjects;
-
-      if (!this.historyMode) {
-        this.lastPicture = imgObjects[imgObjects.length - 1];
-      }
     });
 
     // when custom time has been selected by user
     this.timelineSubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       if (this.pictureList) {
-        this.lastPicture = this.calcNearestPicture(telemetry.getTimestamp().value);
-        // this.historyMode = this.telemetryList.length > index;   // disable historyMode if slider is on max
+        this.lastPicture = this.calcNearestPicture(this.selTelemetry.getTimestamp().value);
       }
     });
   }
@@ -98,11 +85,11 @@ export class PictureComponent implements OnInit, OnDestroy {
   }
 
   private generateOutputRows() {
-    if (this.lastTelemetry) {
+    if (this.selTelemetry) {
       this.smallTelemetryOutput = [
-        this.lastTelemetry.getSpeed(),
-        this.lastTelemetry.getDirectionCombined(),
-        this.lastTelemetry.getAlt(),
+        this.selTelemetry.getSpeed(),
+        this.selTelemetry.getDirectionCombined(),
+        this.selTelemetry.getAlt(),
       ];
     }
   }
