@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryObject} from '../../models/objects/TelemetryObject';
 import {TimerObservable} from 'rxjs/observable/TimerObservable';
@@ -40,7 +40,7 @@ export class TimelineComponent implements OnInit {
 
   private lookupSize: BehaviorSubject<number> = new BehaviorSubject(5);
 
-  constructor(private telemetryService: TelemetryService) {
+  constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService) {
     this.playMode = true;
     this.loopMode = false;
     this.liveMode = true;
@@ -53,6 +53,7 @@ export class TimelineComponent implements OnInit {
     this.telemetryService.getTelemetryIdsObservable().subscribe((telemetryIds) => {
       this.allTelemetryIdsList = telemetryIds;
 
+      console.log("Update");
       // Automatic Mode
       if (this.playMode && this.liveMode) { // auto update list
         this.timelineSliderValue = telemetryIds.length;
@@ -60,8 +61,9 @@ export class TimelineComponent implements OnInit {
 
         this.telemetryService.currentTelemetryIdSubject.next(telemetryIds[telemetryIds.length - 1]);
       }
-
       this.timelineMax = telemetryIds.length;
+      console.log(this.timelineSliderValue, this.timelineMax);
+      this.ref.detectChanges();
     });
 
     this.telemetryService.getNextNTelemetry(this.telemetryService.currentTelemetryIdSubject, this.lookupSize)
@@ -101,6 +103,10 @@ export class TimelineComponent implements OnInit {
     } else {
       if (this.timerSubscripton) {
         this.timerSubscripton.unsubscribe();
+      }
+
+      if (this.liveMode) {
+        this.liveMode = false;
       }
     }
   }

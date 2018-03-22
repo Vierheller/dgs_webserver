@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TelemetryService} from "../services/telemetry.service";
 import {TelemetryObject} from "../models/objects/TelemetryObject";
 
@@ -10,12 +10,13 @@ import {TelemetryObject} from "../models/objects/TelemetryObject";
 export class FooterComponent implements OnInit {
   lastTel: TelemetryObject;
 
-  constructor(private telemetryService: TelemetryService) {
+  constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService) {
   }
 
   ngOnInit() {
     this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       this.lastTel = telemetry;
+      this.ref.detectChanges();
     });
   }
 }
