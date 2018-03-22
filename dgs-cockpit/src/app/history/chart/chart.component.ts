@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import 'rxjs/add/operator/do';
@@ -30,12 +30,19 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log("on init");
     this.initializeChart();
+
+    console.log("initialized");
 
     this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       teleObjects.forEach((teleObject) => {
         this.createSeriesFromTelemetry(teleObject);
       });
+
+      console.log("Telemetryobjects to draw: " + teleObjects.length);
+
+      //this.chartDatasets = [{data: [65, 59, 80, 81, 56, 55, 40], label: 'My First dataset'}];
     });
   }
 
@@ -51,11 +58,13 @@ export class ChartComponent implements OnInit, OnDestroy {
   }
 
   createSeriesFromTelemetry(tele: TelemetryObject) {
+    let result: Series;
+
     this.chartLabels.push(tele.getTimestampConverted().value);
 
     if (this.parameter) {
       for (const str of this.parameter) {
-        const result = this.chartDatasets.find(series => {
+        result = this.chartDatasets.find(series => {
           return series.label === telemetryDictonary[str].name;
         });
 
@@ -64,6 +73,9 @@ export class ChartComponent implements OnInit, OnDestroy {
           result.label = telemetryDictonary[str].name;
         }
       }
+
+      this.chartDatasets = [];
+      this.chartDatasets.push(result);
     }
   }
 

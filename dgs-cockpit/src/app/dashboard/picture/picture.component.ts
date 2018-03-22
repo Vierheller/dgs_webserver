@@ -4,7 +4,6 @@ import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryO
 import {ImageService} from '../../services/image.service';
 import {ImageObject} from '../../models/objects/ImageObject';
 import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-picture',
