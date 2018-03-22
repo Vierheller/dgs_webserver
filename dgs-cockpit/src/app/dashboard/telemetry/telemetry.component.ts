@@ -23,9 +23,9 @@ export class TelemetryComponent implements OnInit, OnDestroy {
   constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService) {
     this.collapseText = 'Parameter einblenden';
     this.manualSlidingMode = false;
-    this.outputWeather = new Array<TelemetryElement>();
-    this.outputMovement = new Array<TelemetryElement>();
-    this.outputOthers = new Array<TelemetryElement>();
+    this.outputWeather = [];
+    this.outputMovement = [];
+    this.outputOthers = [];
     this.generateTelemetryToOutput();   // set the init values to UI
   }
 

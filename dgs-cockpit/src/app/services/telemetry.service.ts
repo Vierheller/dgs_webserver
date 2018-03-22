@@ -49,7 +49,6 @@ export class TelemetryService {
           const dataset = data.rows.map(row => {
             return row.id;
           });
-          console.log('Dataset length: ' + dataset.length);
           subscriber.next(dataset);
           subscriber.complete();
         })
