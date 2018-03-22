@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {TelemetryService} from '../../services/telemetry.service';
 import {TelemetryElement, TelemetryObject} from '../../models/objects/TelemetryObject';
 import {ImageService} from '../../services/image.service';
@@ -28,7 +28,8 @@ export class PictureComponent implements OnInit, OnDestroy {
   selIndex: number;
   historyMode: boolean;
 
-  constructor(private telemetryService: TelemetryService, private imageService: ImageService) {
+  constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService,
+              private imageService: ImageService) {
     this.pictureList = new Array<ImageObject>();
     this.smallTelemetryOutput = new Array<TelemetryElement>();
     this.historyMode = false;
@@ -41,6 +42,7 @@ export class PictureComponent implements OnInit, OnDestroy {
     this.telemetrySubscription = this.telemetryService.getTelemetryForCurrentId().subscribe((telemetry) => {
       this.lastTelemetry = telemetry;
       this.generateOutputRows();
+      this.ref.detectChanges();
     });
 
     // get image data
