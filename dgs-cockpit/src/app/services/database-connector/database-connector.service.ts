@@ -18,7 +18,7 @@ export class DatabaseConnectorService {
       this.isInstantiated = true;
     }
 
-    this.localDb.sync(this.remoteDb, {
+    this.localDb.replicate.from(this.remoteDb, {
       live: true,
       retry: true
     }).on('change', function (change) {
