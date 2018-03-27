@@ -1,14 +1,15 @@
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { TelemetryService } from '../../services/telemetry.service';
 import { TelemetryObject } from '../../models/objects/TelemetryObject';
 import 'rxjs/add/operator/do';
-import {telemetryDictonary} from "../../models/config/telemetryDic";
-import {Subscription} from "rxjs/Subscription";
+import {telemetryDictonary} from '../../models/config/telemetryDic';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  styleUrls: ['./chart.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ChartComponent implements OnInit, OnDestroy {
@@ -25,7 +26,7 @@ export class ChartComponent implements OnInit, OnDestroy {
 
   public chartOptions: any = { responsive: true };
 
-  constructor(private telemetryService: TelemetryService) {
+  constructor(private ref: ChangeDetectorRef, private telemetryService: TelemetryService) {
 
   }
 
@@ -33,9 +34,18 @@ export class ChartComponent implements OnInit, OnDestroy {
     this.initializeChart();
 
     this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
-      teleObjects.forEach((teleObject) => {
-        this.createSeriesFromTelemetry(teleObject);
-      });
+      const tmpGap = Math.max(1, Math.round(teleObjects.length / 500));
+      console.log('Elements ' + teleObjects.length + ' tmpGap ' + tmpGap);
+
+      for (let index = 0; index < teleObjects.length; index += tmpGap) {
+        console.log(index);
+        if(index > teleObjects.length) {
+          this.createSeriesFromTelemetry(teleObjects[teleObjects.length - 1]);
+        } else {
+          this.createSeriesFromTelemetry(teleObjects[index]);
+        }
+      }
+      this.ref.detectChanges();
     });
   }
 
@@ -66,6 +76,7 @@ export class ChartComponent implements OnInit, OnDestroy {
           result.label = telemetryDictonary[str].name;
         }
       }
+      console.log('RESULT LENGTH ' + result.data.length);
 
       this.chartDatasets = [];
       this.chartDatasets.push(result);
