@@ -15,14 +15,17 @@ import {Subscription} from 'rxjs/Subscription';
 export class ChartComponent implements OnInit, OnDestroy {
   private telemetrySubscription: Subscription;
 
-  @Input()  title: string;
-  @Input()  parameter: string[];
+  @Input() title: string;
+  @Input() parameter: string[];
+  @Input() chartDatasets: Array<Series> = [];
+  @Input() chartLabels: Array<string> = [];
+  @Input() chartColors: Array<SeriesStyling> = [];
 
   public chartType = 'line';
 
-  public chartDatasets: Array<Series> = [];
-  public chartLabels: Array<string> = [];
-  public chartColors: Array<SeriesStyling> = [];
+  // public chartDatasets: Array<Series> = [];
+  // public chartLabels: Array<string> = [];
+  // public chartColors: Array<SeriesStyling> = [];
 
   public chartOptions: any = { responsive: true };
 
@@ -33,7 +36,7 @@ export class ChartComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeChart();
 
-    this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
+  /*  this.telemetrySubscription = this.telemetryService.getAllTelemetrys().subscribe((teleObjects) => {
       const tmpGap = Math.max(1, Math.round(teleObjects.length / 500));
       console.log('Elements ' + teleObjects.length + ' tmpGap ' + tmpGap);
 
@@ -46,11 +49,11 @@ export class ChartComponent implements OnInit, OnDestroy {
         }
       }
       this.ref.detectChanges();
-    });
+    }); */
   }
 
   ngOnDestroy() {
-    this.telemetrySubscription.unsubscribe();
+   // this.telemetrySubscription.unsubscribe();
   }
 
   initializeChart() {
